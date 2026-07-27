@@ -251,7 +251,7 @@ GameObject:
   - component: {fileID: 5001773761775098508}
   - component: {fileID: 234906390461112647}
   m_Layer: 0
-  m_Name: pain point
+  m_Name: PainPointV1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -2,20 +2,24 @@ using UnityEngine;
 
 public class PainPoint : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+	[SerializeField]
+	private Key _neededKey;
+	public enum Key { UP, DOWN, LEFT, RIGHT, A, M, I, N };
+
+	public Key GetNeededKey()
+	{
+		return _neededKey;
+	}
+
+	// Start is called once before the first execution of Update after the MonoBehaviour is created
+	void Start()
     {
-        SpawnPainPoints();
+
 	}
 
     // Update is called once per frame
     void Update()
     {
         
-    }
-
-    private void SpawnPainPoints()
-    {
-
     }
 }
