@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PainPoint : MonoBehaviour
 {
 	[SerializeField]
 	private Key _neededKey;
-	public enum Key { UP, DOWN, LEFT, RIGHT, A, M, I, N };
+	//public enum Key { UP, DOWN, LEFT, RIGHT, A, M, I, N };
 
 	public Key GetNeededKey()
 	{

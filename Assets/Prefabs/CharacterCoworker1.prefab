@@ -50,15 +50,15 @@ MonoBehaviour:
   _curedSprite: {fileID: 2800000, guid: 8fb3681a11ef94a4599f7c3378ca3174, type: 3}
   _challengeType: 0
   _painPoints:
-  - {fileID: 8057567216309783048}
-  - {fileID: 6231670408107455950}
-  - {fileID: 4649622263484943705}
-  - {fileID: 7215065159566909024}
+  - {fileID: 6345155437909091385}
+  - {fileID: 7036848896403905535}
+  - {fileID: 8600319623911138152}
+  - {fileID: 6052187507649917009}
   _orderSymbols:
-  - {fileID: 6173013744151529377, guid: 898c6dad45156394b81c7dcd55f44e3b, type: 3}
-  - {fileID: 6173013744151529377, guid: 2f4044b6f65a74a49a9f5cb514d24e91, type: 3}
-  - {fileID: 6173013744151529377, guid: cdab168f8a83f1e40baad83ca24e4d38, type: 3}
-  - {fileID: 6173013744151529377, guid: 37ce65d0f84fd6b43ab15d1732b75931, type: 3}
+  - {fileID: -2171197151807330085, guid: 898c6dad45156394b81c7dcd55f44e3b, type: 3}
+  - {fileID: 8346941385622064937, guid: 2f4044b6f65a74a49a9f5cb514d24e91, type: 3}
+  - {fileID: 502054037468351441, guid: cdab168f8a83f1e40baad83ca24e4d38, type: 3}
+  - {fileID: -4610214409805697103, guid: 37ce65d0f84fd6b43ab15d1732b75931, type: 3}
 --- !u!1 &4706106539555620558
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +229,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8009525798844297699, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
       propertyPath: _neededKey
-      value: 1
+      value: 64
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -241,11 +241,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6539250546092601948, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
   m_PrefabInstance: {fileID: 1044946777384544796}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6231670408107455950 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6411774255712640978, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
+--- !u!114 &7036848896403905535 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8009525798844297699, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
   m_PrefabInstance: {fileID: 1044946777384544796}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c652752fc05709b47be98c3ed9f884af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PainPoint
 --- !u!1001 &1764835350900609675
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -320,23 +326,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8009525798844297699, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
       propertyPath: _neededKey
-      value: 2
+      value: 61
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
---- !u!1 &4649622263484943705 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6411774255712640978, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
-  m_PrefabInstance: {fileID: 1764835350900609675}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4809248325404156119 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6539250546092601948, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
   m_PrefabInstance: {fileID: 1764835350900609675}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8600319623911138152 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8009525798844297699, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
+  m_PrefabInstance: {fileID: 1764835350900609675}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c652752fc05709b47be98c3ed9f884af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PainPoint
 --- !u!1001 &3974716975145637338
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -409,19 +421,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8009525798844297699, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
+      propertyPath: _neededKey
+      value: 63
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
+--- !u!114 &6345155437909091385 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8009525798844297699, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
+  m_PrefabInstance: {fileID: 3974716975145637338}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c652752fc05709b47be98c3ed9f884af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PainPoint
 --- !u!4 &7919894121645713286 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6539250546092601948, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
-  m_PrefabInstance: {fileID: 3974716975145637338}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8057567216309783048 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6411774255712640978, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
   m_PrefabInstance: {fileID: 3974716975145637338}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4384884532033569202
@@ -498,18 +520,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8009525798844297699, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
       propertyPath: _neededKey
-      value: 3
+      value: 62
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
---- !u!1 &7215065159566909024 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6411774255712640978, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
+--- !u!114 &6052187507649917009 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8009525798844297699, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
   m_PrefabInstance: {fileID: 4384884532033569202}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c652752fc05709b47be98c3ed9f884af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PainPoint
 --- !u!4 &7357237498761163758 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6539250546092601948, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}

@@ -44,7 +44,7 @@ public class LevelControl : MonoBehaviour
         //        break;
         //}
 		_spawner = CharacterSpawner.Instance;
-        _spawner.SpawnCharacter(_characterList[0], _moveSpeed, 3);
+        _spawner.SpawnCharacter(_characterList[0], _moveSpeed, 2);
 	}
 
     // Update is called once per frame

@@ -3,6 +3,8 @@ using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using static UnityEditor.PlayerSettings;
 
 public class Character : MonoBehaviour
@@ -16,14 +18,19 @@ public class Character : MonoBehaviour
 	[SerializeField]
 	private ChallengeType _challengeType;
 	[SerializeField]
-    private List<GameObject> _painPoints = new List<GameObject>();
+    private List<PainPoint> _painPoints = new List<PainPoint>();
 	[SerializeField]
-	private List<Object> _orderSymbols = new List<Object>();
-	private List<GameObject> _enabledPainPoints = new List<GameObject>();
+	private List<OrderSymbol> _orderSymbols = new List<OrderSymbol>();
+	private List<PainPoint> _enabledPainPoints = new List<PainPoint>();
+	private List<Key> _expectedPressingOrder = new List<Key>();
+	List<OrderSymbol> _neededOrderSymbols = new List<OrderSymbol>();
+	SortedDictionary<int, PainPoint> _painPointsOrder = new SortedDictionary<int, PainPoint>();
+	private int _currentExpectedKeyIndex = 0;
 	private float _moveSpeed;
 	private Texture2D _currentSprite;
     private int _painPointNumber;
     private float _timer;
+    
 	private enum ChallengeType { NORMAL, AMIN, CROSS };
 	
 	public enum state {WAITING, UNCURED, HIT, CURED};
@@ -49,29 +56,37 @@ public class Character : MonoBehaviour
         _painPointNumber = painPointNumber;
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 		DecideVisiblePainPoints();
 		SpawnSymbols();
-	}
+        _expectedPressingOrder = GetExpectedPressingOrder();
+    }
 
-    // Update is called once per frame
     void Update()
     {
         if(_currentState == state.UNCURED && transform.position.x < 0)
         {
-            float newPosX = transform.position.x+0.5f*_moveSpeed;
-            transform.position = new Vector3(newPosX, transform.position.y, transform.position.z);
-        }
-    }
+            MoveToCenter();
+		}
+        else if (_currentState == state.UNCURED)
+        {
+            CheckRightKeysArepressed();			
+		}
+	}
+
+    private void MoveToCenter()
+    {
+		float newPosX = transform.position.x + 0.5f * _moveSpeed;
+		transform.position = new Vector3(newPosX, transform.position.y, transform.position.z);
+	}
 
     private void DecideVisiblePainPoints()
     {
-        //shuffles list of pain points
-        List<GameObject> shuffledPainPoints = Shuffle(_painPoints);
-        //chooses the pain points to keep enabled (truncates to how many are needed)
-        List<GameObject> truncatedPainPoints = TruncateList(shuffledPainPoints);
+		//shuffles list of pain points
+		List<PainPoint> shuffledPainPoints = Shuffle(_painPoints);
+		//chooses the pain points to keep enabled (truncates to how many are needed)
+		List<PainPoint> truncatedPainPoints = TruncateList(shuffledPainPoints);
         _enabledPainPoints = truncatedPainPoints;
 
         //disables pain points
@@ -84,48 +99,82 @@ public class Character : MonoBehaviour
         }
 	}
 
-    private List<Object> GetNeededOrderSymbols()
+    private List<OrderSymbol> GetNeededOrderSymbols()
     {
         //truncated symbol list to how many are needed
-        List<Object> truncatedOrderSymbols = TruncateList(_orderSymbols);
+        List<OrderSymbol> truncatedOrderSymbols = TruncateList(_orderSymbols);
         //shuffles list
-        List<Object> shuffledOrderSymbols = Shuffle(truncatedOrderSymbols);
+        List<OrderSymbol> shuffledOrderSymbols = Shuffle(truncatedOrderSymbols);
         return shuffledOrderSymbols;
 	}
 
     //override for different challenges
     private void SpawnSymbols()
     {
-        List<Object> neededOrderSymbols = GetNeededOrderSymbols();
+	    _neededOrderSymbols = GetNeededOrderSymbols();
         for(int i=0; i < _enabledPainPoints.Count; i++)
         {
-            Instantiate(neededOrderSymbols[i], _enabledPainPoints[i].transform.position, Quaternion.identity, _enabledPainPoints[i].transform);
+            Instantiate(_neededOrderSymbols[i], _enabledPainPoints[i].transform.position, Quaternion.identity, _enabledPainPoints[i].transform);
 		}
     }
 
-    private List<Object> TruncateList(List<Object> list)
+    private List<Key> GetExpectedPressingOrder()
     {
-        List<Object> newList = list.GetRange(0, _painPointNumber);
+        List<Key> expectedPressingOrder = new List<Key>();
+        for (int i = 0; i < _painPointNumber; i++)
+        {
+            _painPointsOrder.Add(_neededOrderSymbols[i].GetOrderNumber()-1, _enabledPainPoints[i]);
+        }
+        for(int i = 0; i < _painPointsOrder.Count; i++)
+        {
+            expectedPressingOrder.Add(_painPointsOrder[i].GetNeededKey());
+		}
+        return expectedPressingOrder;
+	}
+
+    private void CheckRightKeysArepressed()
+    {
+		if (Keyboard.current[_expectedPressingOrder[_currentExpectedKeyIndex]].wasPressedThisFrame)
+		{
+			//_painPoints[_currentExpectedKeyIndex].gameObject.SetActive(false);
+			_painPointsOrder[_currentExpectedKeyIndex].gameObject.SetActive(false);
+			if (_currentExpectedKeyIndex < _painPointNumber - 1)
+				_currentExpectedKeyIndex++;
+			else
+			{
+				Debug.Log("CURED");
+				_currentState = state.CURED;
+			}
+		}
+		else if (Keyboard.current.anyKey.wasPressedThisFrame)
+		{
+			Debug.Log("AU");
+		}
+	}
+
+	private List<OrderSymbol> TruncateList(List<OrderSymbol> list)
+    {
+        List<OrderSymbol> newList = list.GetRange(0, _painPointNumber);
         return newList;
     }
 
-	private List<GameObject> TruncateList(List<GameObject> list)
+	private List<PainPoint> TruncateList(List<PainPoint> list)
 	{
-		List<GameObject> newList = list.GetRange(0, _painPointNumber);
+		List<PainPoint> newList = list.GetRange(0, _painPointNumber);
 		return newList;
 	}
 
-	private List<GameObject> Shuffle(List<GameObject> list)
+	private List<PainPoint> Shuffle(List<PainPoint> list)
     {
 		System.Random rng = new System.Random();
-		List<GameObject> shuffledList = list.OrderBy(x => rng.Next()).ToList();
+		List<PainPoint> shuffledList = list.OrderBy(x => rng.Next()).ToList();
         return shuffledList;
 	}
 
-	private List<Object> Shuffle(List<Object> list)
+	private List<OrderSymbol> Shuffle(List<OrderSymbol> list)
     {
 		System.Random rng = new System.Random();
-		List<Object> shuffledList = list.OrderBy(x => rng.Next()).ToList();
+		List<OrderSymbol> shuffledList = list.OrderBy(x => rng.Next()).ToList();
         return shuffledList;
 	}
 }
