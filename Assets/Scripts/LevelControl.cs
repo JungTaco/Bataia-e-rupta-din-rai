@@ -10,7 +10,7 @@ public class LevelControl : MonoBehaviour
 	private CharacterSpawner _spawner;
     //serialized si il pun din inspector?
     private int _currentLevel = 1;
-    private float _moveSpeed = 0.25f;
+    private float _moveSpeed = 0.15f;
     private enum Phase {EASY, MEDIUM, HARD};
     private Phase _currentPhase = Phase.EASY;
 
@@ -44,7 +44,7 @@ public class LevelControl : MonoBehaviour
         //        break;
         //}
 		_spawner = CharacterSpawner.Instance;
-        _spawner.SpawnCharacter(_characterList[0], _moveSpeed, 2);
+        _spawner.SpawnCharacter(_characterList[0], _moveSpeed, 3);
 	}
 
     // Update is called once per frame

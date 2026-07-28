@@ -2,6 +2,7 @@ using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -10,11 +11,11 @@ using static UnityEditor.PlayerSettings;
 public class Character : MonoBehaviour
 {
     [SerializeField]
-    private Texture2D _uncuredSprite;
+    private Sprite _uncuredSprite;
 	[SerializeField]
-	private Texture2D _hitSprite;
+	private Sprite _hitSprite;
 	[SerializeField]
-	private Texture2D _curedSprite;
+	private Sprite _curedSprite;
 	[SerializeField]
 	private ChallengeType _challengeType;
 	[SerializeField]
@@ -27,10 +28,11 @@ public class Character : MonoBehaviour
 	SortedDictionary<int, PainPoint> _painPointsOrder = new SortedDictionary<int, PainPoint>();
 	private int _currentExpectedKeyIndex = 0;
 	private float _moveSpeed;
-	private Texture2D _currentSprite;
+	private SpriteRenderer _spriteRenderer;
     private int _painPointNumber;
     private float _timer;
-    
+    private float _orthographicScreenWidth;
+
 	private enum ChallengeType { NORMAL, AMIN, CROSS };
 	
 	public enum state {WAITING, UNCURED, HIT, CURED};
@@ -56,8 +58,28 @@ public class Character : MonoBehaviour
         _painPointNumber = painPointNumber;
     }
 
-    void Start()
+    public void SetOrthographicScreenWidth (float newOrthographicScreenWidth)
     {
+        _orthographicScreenWidth = newOrthographicScreenWidth;
+    }
+
+	private void OnEnable()
+	{
+        Actions.OnCured += ChangeSprite;
+        Actions.OnHit += ChangeSprite;
+        Actions.OnHitFinished += ChangeSprite;
+	}
+
+	private void OnDisable()
+	{
+		Actions.OnCured -= ChangeSprite;
+		Actions.OnHit -= ChangeSprite;
+		Actions.OnHitFinished -= ChangeSprite;
+	}
+
+	void Start()
+    {
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 		DecideVisiblePainPoints();
 		SpawnSymbols();
         _expectedPressingOrder = GetExpectedPressingOrder();
@@ -73,9 +95,23 @@ public class Character : MonoBehaviour
         {
             CheckRightKeysArepressed();			
 		}
+        else if(_currentState == state.CURED && transform.position.x < (_orthographicScreenWidth*1.5))
+        {
+            Leave();
+        }
+		else if (_currentState == state.CURED && transform.position.x >= (_orthographicScreenWidth * 1.5))
+        {
+            Destroy(this.gameObject);
+        }
 	}
 
     private void MoveToCenter()
+    {
+		float newPosX = transform.position.x + 0.5f * _moveSpeed;
+		transform.position = new Vector3(newPosX, transform.position.y, transform.position.z);
+	}
+
+    private void Leave()
     {
 		float newPosX = transform.position.x + 0.5f * _moveSpeed;
 		transform.position = new Vector3(newPosX, transform.position.y, transform.position.z);
@@ -136,20 +172,39 @@ public class Character : MonoBehaviour
     {
 		if (Keyboard.current[_expectedPressingOrder[_currentExpectedKeyIndex]].wasPressedThisFrame)
 		{
-			//_painPoints[_currentExpectedKeyIndex].gameObject.SetActive(false);
 			_painPointsOrder[_currentExpectedKeyIndex].gameObject.SetActive(false);
-			if (_currentExpectedKeyIndex < _painPointNumber - 1)
+            if (_currentExpectedKeyIndex < _painPointNumber - 1)
+            {
+                //_currentState = state.HIT;
+				//Actions.OnHit?.Invoke();
 				_currentExpectedKeyIndex++;
+			}       
 			else
 			{
-				Debug.Log("CURED");
 				_currentState = state.CURED;
+				Actions.OnCured?.Invoke();
 			}
 		}
 		else if (Keyboard.current.anyKey.wasPressedThisFrame)
 		{
-			Debug.Log("AU");
+			//loses a life
 		}
+	}
+
+    private void ChangeSprite()
+    {
+        if(_currentState == state.CURED)
+        {
+			_spriteRenderer.sprite = _curedSprite;
+		}
+		else if (_currentState == state.UNCURED)
+		{
+			_spriteRenderer.sprite = _uncuredSprite;
+		}
+		else if (_currentState == state.HIT)
+        {
+            _spriteRenderer.sprite = _hitSprite;
+        }
 	}
 
 	private List<OrderSymbol> TruncateList(List<OrderSymbol> list)

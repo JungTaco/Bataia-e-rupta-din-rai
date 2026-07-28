@@ -27,11 +27,12 @@ public class CharacterSpawner : MonoBehaviour
 
     public void SpawnCharacter(Character character, float moveSpeed, int painPointNumber)
     {
-		float orthographicWidth = camera.orthographicSize * camera.aspect;
-		Vector3 pos = new Vector3(-orthographicWidth*1.5f, 0, 0);
+		float orthographicScreenWidth = camera.orthographicSize * camera.aspect;
+		Vector3 pos = new Vector3(-orthographicScreenWidth*1.5f, 0, 0);
 		_currentCharacter = Instantiate(character, pos, Quaternion.identity, canvas.transform);
         _currentCharacter.SetMoveSpeed(moveSpeed);
         _currentCharacter.SetCurrentState(Character.state.UNCURED);
 		_currentCharacter.SetPainPointNumber(painPointNumber);
+        _currentCharacter.SetOrthographicScreenWidth(orthographicScreenWidth);
 	}
 }

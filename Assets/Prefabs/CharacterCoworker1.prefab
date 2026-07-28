@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f82b6ce06c788c42b599c6bdd69cbdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character
-  _uncuredSprite: {fileID: 2800000, guid: 1844d9b47e400bd46b45df3c7d95c457, type: 3}
-  _hitSprite: {fileID: 2800000, guid: 353dd24708d7b9144b4824a1bb3737ab, type: 3}
-  _curedSprite: {fileID: 2800000, guid: 8fb3681a11ef94a4599f7c3378ca3174, type: 3}
+  _uncuredSprite: {fileID: 21300000, guid: 1844d9b47e400bd46b45df3c7d95c457, type: 3}
+  _hitSprite: {fileID: 21300000, guid: 353dd24708d7b9144b4824a1bb3737ab, type: 3}
+  _curedSprite: {fileID: 21300000, guid: 8fb3681a11ef94a4599f7c3378ca3174, type: 3}
   _challengeType: 0
   _painPoints:
   - {fileID: 6345155437909091385}
