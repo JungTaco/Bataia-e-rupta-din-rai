@@ -8,15 +8,29 @@ public class LevelControl : MonoBehaviour
     [SerializeField]
     private List<Character> _characterList = new List<Character>();
 	private CharacterSpawner _spawner;
+    //private Character _currentCharacter;
+    //private Character _nextCharacter;
+    private int _currentCharacterIndex;
     //serialized si il pun din inspector?
     private int _currentLevel = 1;
     private float _moveSpeed = 0.15f;
     private enum Phase {EASY, MEDIUM, HARD};
     private Phase _currentPhase = Phase.EASY;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+	private void OnEnable()
+	{
+        Actions.OnCured += SpawnCharacter;
+	}
+
+	private void OnDisable()
+	{
+		Actions.OnCured -= SpawnCharacter;
+	}
+
+	// Start is called once before the first execution of Update after the MonoBehaviour is created
+	void Start()
     {
+
         //switch (_currentLevel)
         //{
         //    case 1:
@@ -44,7 +58,8 @@ public class LevelControl : MonoBehaviour
         //        break;
         //}
 		_spawner = CharacterSpawner.Instance;
-        _spawner.SpawnCharacter(_characterList[0], _moveSpeed, 3);
+        _currentCharacterIndex = 0;
+        SpawnCharacter();
 	}
 
     // Update is called once per frame
@@ -52,4 +67,14 @@ public class LevelControl : MonoBehaviour
     {
         
     }
+
+    private void SpawnCharacter()
+    {
+        //if currentindex < count
+        if (_currentCharacterIndex < _characterList.Count)
+        {
+            _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _moveSpeed, 3);
+            _currentCharacterIndex++;
+        }
+	}
 }

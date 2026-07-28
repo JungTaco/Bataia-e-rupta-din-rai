@@ -187,7 +187,7 @@ public class Character : MonoBehaviour
 		}
 		else if (Keyboard.current.anyKey.wasPressedThisFrame)
 		{
-			//loses a life
+			Actions.OnWrongKeyPressed?.Invoke();
 		}
 	}
 
