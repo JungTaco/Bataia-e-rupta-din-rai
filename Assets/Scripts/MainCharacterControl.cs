@@ -13,14 +13,14 @@ public class MainCharacterControl : MonoBehaviour
 
 	private void OnEnable()
 	{
-        Actions.OnWrongKeyPressed += LoseLife;
+        Actions.OnMistakeMade += LoseLife;
         Actions.OnHitCoordinates += Hit;
         Actions.OnHitFinished += FinishHit;
 	}
 
 	private void OnDisable()
 	{
-		Actions.OnWrongKeyPressed -= LoseLife;
+		Actions.OnMistakeMade -= LoseLife;
 		Actions.OnHitCoordinates -= Hit;
 		Actions.OnHitFinished -= FinishHit;
 	}

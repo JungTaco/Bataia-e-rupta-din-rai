@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class LevelControl : MonoBehaviour
 {
-    [SerializeField]
+	public enum ChallengeType { NORMAL, AMIN, CROSS, SUPERSICK };
+	[SerializeField]
     private List<Character> _characterList = new List<Character>();
 	private CharacterSpawner _spawner;
     //private Character _currentCharacter;
@@ -19,12 +20,12 @@ public class LevelControl : MonoBehaviour
 
 	private void OnEnable()
 	{
-        Actions.OnCured += SpawnCharacter;
+        Actions.OnLeft += SpawnCharacter;
 	}
 
 	private void OnDisable()
 	{
-		Actions.OnCured -= SpawnCharacter;
+		Actions.OnLeft -= SpawnCharacter;
 	}
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -73,7 +74,7 @@ public class LevelControl : MonoBehaviour
         //if currentindex < count
         if (_currentCharacterIndex < _characterList.Count)
         {
-            _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _moveSpeed, 2, 4f);
+            _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _moveSpeed, 2, 4f, ChallengeType.NORMAL);
             _currentCharacterIndex++;
         }
 	}

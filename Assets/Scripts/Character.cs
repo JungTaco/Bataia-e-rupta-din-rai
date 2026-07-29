@@ -17,8 +17,7 @@ public class Character : MonoBehaviour
 	private Sprite _hitSprite;
 	[SerializeField]
 	private Sprite _curedSprite;
-	[SerializeField]
-	private ChallengeType _challengeType;
+	private LevelControl.ChallengeType _challengeType;
 	[SerializeField]
     private List<PainPoint> _painPoints = new List<PainPoint>();
 	[SerializeField]
@@ -34,9 +33,8 @@ public class Character : MonoBehaviour
     private float _timer;
     private float _orthographicScreenWidth;
     private bool _isBeingHit;
-	private enum ChallengeType { NORMAL, AMIN, CROSS };
 	
-	public enum State {WAITING, UNCURED, CURED};
+	public enum State {WAITING, UNCURED, CURED, ANGRY};
     private State _currentState = State.WAITING; 
 
     public State GetCurrentState()
@@ -68,16 +66,23 @@ public class Character : MonoBehaviour
         _orthographicScreenWidth = newOrthographicScreenWidth;
     }
 
+    public void SetChallengeType(LevelControl.ChallengeType challengeType)
+    {
+        _challengeType = challengeType;
+    }
+
 	private void OnEnable()
 	{
         Actions.OnCured += ChangeSprite;
-        Actions.OnHit += ChangeSprite;
+		Actions.OnCured += StopTimer;
+		Actions.OnHit += ChangeSprite;
         Actions.OnHitFinished += ChangeSprite;
 	}
 
 	private void OnDisable()
 	{
 		Actions.OnCured -= ChangeSprite;
+		Actions.OnCured -= StopTimer;
 		Actions.OnHit -= ChangeSprite;
 		Actions.OnHitFinished -= ChangeSprite;
 	}
@@ -89,10 +94,10 @@ public class Character : MonoBehaviour
 		SpawnSymbols();
         _expectedPressingOrder = GetExpectedPressingOrder();
         _isBeingHit = false;
-
+		StartCoroutine(CharacterTimer());
 	}
 
-    void Update()
+	void Update()
     {
         if(_currentState == State.UNCURED && transform.position.x < 0)
         {
@@ -106,10 +111,14 @@ public class Character : MonoBehaviour
         {
             Leave();
         }
-		else if (_currentState == State.CURED && transform.position.x >= (_orthographicScreenWidth * 1.5))
-        {
-            Destroy(gameObject);
-        }
+		else if(_currentState == State.ANGRY && !_isBeingHit && transform.position.x < (_orthographicScreenWidth * 1.5))
+		{
+			Leave();
+		}
+		else if (transform.position.x >= (_orthographicScreenWidth * 1.5))
+		{
+			Destroy(gameObject);
+		}
 	}
 
     private void MoveToCenter()
@@ -186,17 +195,18 @@ public class Character : MonoBehaviour
 			if (_currentExpectedKeyIndex < _painPointNumber - 1)
             {
 				_currentExpectedKeyIndex++;
-                StartCoroutine(Hit());
+                StartCoroutine(HitTimer());
 			}       
 			else
 			{
                 _currentState = State.CURED;
 				Actions.OnCured?.Invoke();
+				Actions.OnLeft?.Invoke();
 			}
 		}
 		else if (Keyboard.current.anyKey.wasPressedThisFrame)
 		{
-			Actions.OnWrongKeyPressed?.Invoke();
+			Actions.OnMistakeMade?.Invoke();
 		}
 	}
 
@@ -216,15 +226,33 @@ public class Character : MonoBehaviour
 		}
 	}
 
-    IEnumerator Hit()
+    private IEnumerator HitTimer()
     {
 		while (true)
 		{
 			yield return new WaitForSeconds(.15f);
             _isBeingHit = false;
             Actions.OnHitFinished?.Invoke();
-            StopCoroutine(Hit());
+            StopCoroutine(HitTimer());
 		}
+	}
+
+	private IEnumerator CharacterTimer()
+    {
+		while (true)
+		{
+			yield return new WaitForSeconds(_timer);
+			_currentState = State.ANGRY;
+			Actions.OnMistakeMade?.Invoke();
+			Actions.OnLeft?.Invoke();
+			StopCoroutine(CharacterTimer());
+		}
+	}
+
+	private void StopTimer()
+	{
+		StopCoroutine(CharacterTimer());
+		Debug.Log("Timer stopped");
 	}
 
 	private List<OrderSymbol> TruncateList(List<OrderSymbol> list)

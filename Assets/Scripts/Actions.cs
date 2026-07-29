@@ -7,5 +7,6 @@ public static class Actions
 	public static Action OnHit;
 	public static Action<Vector3> OnHitCoordinates;
 	public static Action OnHitFinished;
-	public static Action OnWrongKeyPressed;
+	public static Action OnMistakeMade;
+	public static Action OnLeft;
 }
