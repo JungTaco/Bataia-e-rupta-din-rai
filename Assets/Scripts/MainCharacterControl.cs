@@ -1,26 +1,36 @@
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class MainCharacterControl : MonoBehaviour
 {
     [SerializeField]
     private LifeSystem _lifeSystem;
-    private int _lives;
+    [SerializeField]
+    private SpriteRenderer _idleHand;
+	[SerializeField]
+	private SpriteRenderer _hittingHand;
+	private int _lives;
 
 	private void OnEnable()
 	{
         Actions.OnWrongKeyPressed += LoseLife;
+        Actions.OnHitCoordinates += Hit;
+        Actions.OnHitFinished += FinishHit;
 	}
 
 	private void OnDisable()
 	{
 		Actions.OnWrongKeyPressed -= LoseLife;
+		Actions.OnHitCoordinates -= Hit;
+		Actions.OnHitFinished -= FinishHit;
 	}
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
     {
         _lives = 3;
-    }
+        _hittingHand.gameObject.SetActive(false);
+	}
 
     // Update is called once per frame
     void Update()
@@ -46,4 +56,17 @@ public class MainCharacterControl : MonoBehaviour
         //invoke action pentru game over?
         Debug.Log("ai murit");
     }
+
+    private void Hit(Vector3 pos)
+    {
+        _idleHand.gameObject.SetActive(false);
+        _hittingHand.transform.position = pos;
+        _hittingHand.gameObject.SetActive(true);
+    }
+
+    private void FinishHit()
+    {
+		_idleHand.gameObject.SetActive(true);
+		_hittingHand.gameObject.SetActive(false);
+	}
 }

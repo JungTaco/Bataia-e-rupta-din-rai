@@ -73,7 +73,7 @@ public class LevelControl : MonoBehaviour
         //if currentindex < count
         if (_currentCharacterIndex < _characterList.Count)
         {
-            _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _moveSpeed, 3);
+            _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _moveSpeed, 2, 4f);
             _currentCharacterIndex++;
         }
 	}

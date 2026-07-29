@@ -11,7 +11,6 @@ public class LifeSystem : MonoBehaviour
 	void Start()
     {
         _lives = GetComponentsInChildren<SpriteRenderer>().ToList();
-		Debug.Log(_lives[_lives.Count - 1]);
 	}
 
     // Update is called once per frame

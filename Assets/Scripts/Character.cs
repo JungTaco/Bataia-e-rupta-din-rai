@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Rendering;
@@ -32,18 +33,18 @@ public class Character : MonoBehaviour
     private int _painPointNumber;
     private float _timer;
     private float _orthographicScreenWidth;
-
+    private bool _isBeingHit;
 	private enum ChallengeType { NORMAL, AMIN, CROSS };
 	
-	public enum state {WAITING, UNCURED, HIT, CURED};
-    private state _currentState = state.WAITING; 
+	public enum State {WAITING, UNCURED, CURED};
+    private State _currentState = State.WAITING; 
 
-    public state GetCurrentState()
+    public State GetCurrentState()
     {
         return _currentState;
     }
 
-    public void SetCurrentState(state newState)
+    public void SetCurrentState(State newState)
     {
         _currentState = newState;
     }
@@ -58,7 +59,11 @@ public class Character : MonoBehaviour
         _painPointNumber = painPointNumber;
     }
 
-    public void SetOrthographicScreenWidth (float newOrthographicScreenWidth)
+	public void SetTimer(float timer)
+	{
+        _timer = timer;
+	}
+	public void SetOrthographicScreenWidth (float newOrthographicScreenWidth)
     {
         _orthographicScreenWidth = newOrthographicScreenWidth;
     }
@@ -83,25 +88,27 @@ public class Character : MonoBehaviour
 		DecideVisiblePainPoints();
 		SpawnSymbols();
         _expectedPressingOrder = GetExpectedPressingOrder();
-    }
+        _isBeingHit = false;
+
+	}
 
     void Update()
     {
-        if(_currentState == state.UNCURED && transform.position.x < 0)
+        if(_currentState == State.UNCURED && transform.position.x < 0)
         {
             MoveToCenter();
 		}
-        else if (_currentState == state.UNCURED)
+        else if (_currentState == State.UNCURED)
         {
             CheckRightKeysArepressed();			
 		}
-        else if(_currentState == state.CURED && transform.position.x < (_orthographicScreenWidth*1.5))
+        else if(_currentState == State.CURED && !_isBeingHit && transform.position.x < (_orthographicScreenWidth*1.5))
         {
             Leave();
         }
-		else if (_currentState == state.CURED && transform.position.x >= (_orthographicScreenWidth * 1.5))
+		else if (_currentState == State.CURED && transform.position.x >= (_orthographicScreenWidth * 1.5))
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
 	}
 
@@ -173,15 +180,17 @@ public class Character : MonoBehaviour
 		if (Keyboard.current[_expectedPressingOrder[_currentExpectedKeyIndex]].wasPressedThisFrame)
 		{
 			_painPointsOrder[_currentExpectedKeyIndex].gameObject.SetActive(false);
-            if (_currentExpectedKeyIndex < _painPointNumber - 1)
+            _isBeingHit = true;
+			Actions.OnHit?.Invoke();
+            Actions.OnHitCoordinates?.Invoke(_painPointsOrder[_currentExpectedKeyIndex].transform.position);
+			if (_currentExpectedKeyIndex < _painPointNumber - 1)
             {
-                //_currentState = state.HIT;
-				//Actions.OnHit?.Invoke();
 				_currentExpectedKeyIndex++;
+                StartCoroutine(Hit());
 			}       
 			else
 			{
-				_currentState = state.CURED;
+                _currentState = State.CURED;
 				Actions.OnCured?.Invoke();
 			}
 		}
@@ -193,18 +202,29 @@ public class Character : MonoBehaviour
 
     private void ChangeSprite()
     {
-        if(_currentState == state.CURED)
+		if (_isBeingHit)
+		{
+			_spriteRenderer.sprite = _hitSprite;
+		}
+		else if (_currentState == State.CURED)
         {
 			_spriteRenderer.sprite = _curedSprite;
 		}
-		else if (_currentState == state.UNCURED)
+		else if (_currentState == State.UNCURED)
 		{
 			_spriteRenderer.sprite = _uncuredSprite;
 		}
-		else if (_currentState == state.HIT)
-        {
-            _spriteRenderer.sprite = _hitSprite;
-        }
+	}
+
+    IEnumerator Hit()
+    {
+		while (true)
+		{
+			yield return new WaitForSeconds(.15f);
+            _isBeingHit = false;
+            Actions.OnHitFinished?.Invoke();
+            StopCoroutine(Hit());
+		}
 	}
 
 	private List<OrderSymbol> TruncateList(List<OrderSymbol> list)
