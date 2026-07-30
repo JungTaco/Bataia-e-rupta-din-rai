@@ -1052,8 +1052,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelControl
   _characterList:
   - {fileID: 5841711691876423021, guid: 49b8d9c1ca515624bb4ea76578bf44bf, type: 3}
-  - {fileID: 5841711691876423021, guid: 2cb6d221baafb744784c9ca5819c92c1, type: 3}
-  - {fileID: 5841711691876423021, guid: 15e924236f4a82f46a99c0782162bae4, type: 3}
+  - {fileID: 5841711691876423021, guid: b3dabb244f4ed0c4982c333663cd87c2, type: 3}
+  - {fileID: -3188072684067862380, guid: 1a4e19dc6f379ed4793eba8a006a7d50, type: 3}
+  - {fileID: 3081218382918142112, guid: 674c6b0a20afcb545b87839dda02e39f, type: 3}
 --- !u!1 &2003483280
 GameObject:
   m_ObjectHideFlags: 0

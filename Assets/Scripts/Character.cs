@@ -12,30 +12,29 @@ using static UnityEditor.PlayerSettings;
 public class Character : MonoBehaviour
 {
     [SerializeField]
-    private Sprite _uncuredSprite;
+	protected Sprite _uncuredSprite;
 	[SerializeField]
-	private Sprite _hitSprite;
+	protected Sprite _hitSprite;
 	[SerializeField]
-	private Sprite _curedSprite;
-	private LevelControl.ChallengeType _challengeType;
+	protected Sprite _curedSprite;
 	[SerializeField]
-    private List<PainPoint> _painPoints = new List<PainPoint>();
+    protected List<PainPoint> _painPoints = new List<PainPoint>();
 	[SerializeField]
-	private List<OrderSymbol> _orderSymbols = new List<OrderSymbol>();
-	private List<PainPoint> _enabledPainPoints = new List<PainPoint>();
-	private List<Key> _expectedPressingOrder = new List<Key>();
-	List<OrderSymbol> _neededOrderSymbols = new List<OrderSymbol>();
-	SortedDictionary<int, PainPoint> _painPointsOrder = new SortedDictionary<int, PainPoint>();
-	private int _currentExpectedKeyIndex = 0;
-	private float _moveSpeed;
-	private SpriteRenderer _spriteRenderer;
-    private int _painPointNumber;
-    private float _timer;
-    private float _orthographicScreenWidth;
-    private bool _isBeingHit;
-	
+	protected List<OrderSymbol> _orderSymbols = new List<OrderSymbol>();
+	protected List<PainPoint> _enabledPainPoints = new List<PainPoint>();
+	protected List<Key> _expectedPressingOrder = new List<Key>();
+	protected List<OrderSymbol> _neededOrderSymbols = new List<OrderSymbol>();
+	protected SortedDictionary<int, PainPoint> _painPointsOrder = new SortedDictionary<int, PainPoint>();
+	protected int _currentExpectedKeyIndex = 0;
+	protected float _moveSpeed;
+	protected SpriteRenderer _spriteRenderer;
+	protected int _painPointNumber;
+	protected float _timer;
+	protected float _orthographicScreenWidth;
+	protected bool _isBeingHit;
+
 	public enum State {WAITING, UNCURED, CURED, ANGRY};
-    private State _currentState = State.WAITING; 
+	protected State _currentState = State.WAITING; 
 
     public State GetCurrentState()
     {
@@ -66,12 +65,7 @@ public class Character : MonoBehaviour
         _orthographicScreenWidth = newOrthographicScreenWidth;
     }
 
-    public void SetChallengeType(LevelControl.ChallengeType challengeType)
-    {
-        _challengeType = challengeType;
-    }
-
-	private void OnEnable()
+	protected void OnEnable()
 	{
         Actions.OnCured += ChangeSprite;
 		Actions.OnCured += StopTimer;
@@ -79,7 +73,7 @@ public class Character : MonoBehaviour
         Actions.OnHitFinished += ChangeSprite;
 	}
 
-	private void OnDisable()
+	protected void OnDisable()
 	{
 		Actions.OnCured -= ChangeSprite;
 		Actions.OnCured -= StopTimer;
@@ -87,7 +81,7 @@ public class Character : MonoBehaviour
 		Actions.OnHitFinished -= ChangeSprite;
 	}
 
-	void Start()
+	protected void Start()
     {
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 		DecideVisiblePainPoints();
@@ -97,7 +91,7 @@ public class Character : MonoBehaviour
 		StartCoroutine(CharacterTimer());
 	}
 
-	void Update()
+	protected void Update()
     {
         if(_currentState == State.UNCURED && transform.position.x < 0)
         {
@@ -121,19 +115,19 @@ public class Character : MonoBehaviour
 		}
 	}
 
-    private void MoveToCenter()
+	protected void MoveToCenter()
     {
 		float newPosX = transform.position.x + 0.5f * _moveSpeed;
 		transform.position = new Vector3(newPosX, transform.position.y, transform.position.z);
 	}
 
-    private void Leave()
+	protected void Leave()
     {
 		float newPosX = transform.position.x + 0.5f * _moveSpeed;
 		transform.position = new Vector3(newPosX, transform.position.y, transform.position.z);
 	}
 
-    private void DecideVisiblePainPoints()
+    protected virtual void DecideVisiblePainPoints()
     {
 		//shuffles list of pain points
 		List<PainPoint> shuffledPainPoints = Shuffle(_painPoints);
@@ -151,7 +145,7 @@ public class Character : MonoBehaviour
         }
 	}
 
-    private List<OrderSymbol> GetNeededOrderSymbols()
+	protected List<OrderSymbol> GetNeededOrderSymbols()
     {
         //truncated symbol list to how many are needed
         List<OrderSymbol> truncatedOrderSymbols = TruncateList(_orderSymbols);
@@ -160,8 +154,8 @@ public class Character : MonoBehaviour
         return shuffledOrderSymbols;
 	}
 
-    //override for different challenges
-    private void SpawnSymbols()
+	//override for different challenges
+	protected virtual void SpawnSymbols()
     {
 	    _neededOrderSymbols = GetNeededOrderSymbols();
         for(int i=0; i < _enabledPainPoints.Count; i++)
@@ -170,7 +164,7 @@ public class Character : MonoBehaviour
 		}
     }
 
-    private List<Key> GetExpectedPressingOrder()
+	protected List<Key> GetExpectedPressingOrder()
     {
         List<Key> expectedPressingOrder = new List<Key>();
         for (int i = 0; i < _painPointNumber; i++)
@@ -184,7 +178,7 @@ public class Character : MonoBehaviour
         return expectedPressingOrder;
 	}
 
-    private void CheckRightKeysArepressed()
+	protected virtual void CheckRightKeysArepressed()
     {
 		if (Keyboard.current[_expectedPressingOrder[_currentExpectedKeyIndex]].wasPressedThisFrame)
 		{
@@ -210,7 +204,7 @@ public class Character : MonoBehaviour
 		}
 	}
 
-    private void ChangeSprite()
+	protected void ChangeSprite()
     {
 		if (_isBeingHit)
 		{
@@ -222,22 +216,23 @@ public class Character : MonoBehaviour
 		}
 		else if (_currentState == State.UNCURED)
 		{
+			//Debug.Log(_spriteRenderer);
 			_spriteRenderer.sprite = _uncuredSprite;
 		}
 	}
 
-    private IEnumerator HitTimer()
+	protected IEnumerator HitTimer()
     {
 		while (true)
 		{
-			yield return new WaitForSeconds(.15f);
+			yield return new WaitForSeconds(.2f);
             _isBeingHit = false;
             Actions.OnHitFinished?.Invoke();
             StopCoroutine(HitTimer());
 		}
 	}
 
-	private IEnumerator CharacterTimer()
+	protected IEnumerator CharacterTimer()
     {
 		while (true)
 		{
@@ -249,32 +244,31 @@ public class Character : MonoBehaviour
 		}
 	}
 
-	private void StopTimer()
+	protected void StopTimer()
 	{
 		StopCoroutine(CharacterTimer());
-		Debug.Log("Timer stopped");
 	}
 
-	private List<OrderSymbol> TruncateList(List<OrderSymbol> list)
+	protected List<OrderSymbol> TruncateList(List<OrderSymbol> list)
     {
         List<OrderSymbol> newList = list.GetRange(0, _painPointNumber);
         return newList;
     }
 
-	private List<PainPoint> TruncateList(List<PainPoint> list)
+	protected List<PainPoint> TruncateList(List<PainPoint> list)
 	{
 		List<PainPoint> newList = list.GetRange(0, _painPointNumber);
 		return newList;
 	}
 
-	private List<PainPoint> Shuffle(List<PainPoint> list)
+	protected List<PainPoint> Shuffle(List<PainPoint> list)
     {
 		System.Random rng = new System.Random();
 		List<PainPoint> shuffledList = list.OrderBy(x => rng.Next()).ToList();
         return shuffledList;
 	}
 
-	private List<OrderSymbol> Shuffle(List<OrderSymbol> list)
+	protected List<OrderSymbol> Shuffle(List<OrderSymbol> list)
     {
 		System.Random rng = new System.Random();
 		List<OrderSymbol> shuffledList = list.OrderBy(x => rng.Next()).ToList();

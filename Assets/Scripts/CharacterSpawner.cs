@@ -25,7 +25,7 @@ public class CharacterSpawner : MonoBehaviour
         
     }
 
-    public void SpawnCharacter(Character character, float moveSpeed, int painPointNumber, float timer, LevelControl.ChallengeType challangeType)
+    public void SpawnCharacter(Character character, float moveSpeed, int painPointNumber, float timer)
     {
         //Instantiates character outside of the screen
 		float orthographicScreenWidth = camera.orthographicSize * camera.aspect;
