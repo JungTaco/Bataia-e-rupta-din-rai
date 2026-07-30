@@ -7,6 +7,10 @@ public class LevelControl : MonoBehaviour
 {
 	[SerializeField]
     private List<Character> _characterList = new List<Character>();
+    [SerializeField]
+    private SpriteRenderer _winPanel;
+	[SerializeField]
+	private SpriteRenderer _losePanel;
 	private CharacterSpawner _spawner;
     //private Character _currentCharacter;
     //private Character _nextCharacter;
@@ -21,12 +25,14 @@ public class LevelControl : MonoBehaviour
 	{
         Actions.OnLeft += SpawnCharacter;
         Actions.OnWaitingTimerEnded += SpawnCharacter;
+        Actions.OnLostLevel += LevelLost;
 	}
 
 	private void OnDisable()
 	{
 		Actions.OnLeft -= SpawnCharacter;
 		Actions.OnWaitingTimerEnded -= SpawnCharacter;
+		Actions.OnLostLevel -= LevelLost;
 	}
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -61,7 +67,10 @@ public class LevelControl : MonoBehaviour
         //}
 		_spawner = CharacterSpawner.Instance;
         _currentCharacterIndex = 0;
-        SpawnCharacter();
+        _winPanel.gameObject.SetActive(false);
+        _losePanel.gameObject.SetActive(false);
+		//_characterList[_currentCharacterIndex].gameObject.SetActive(true);
+		SpawnCharacter();
 	}
 
     // Update is called once per frame
@@ -75,8 +84,23 @@ public class LevelControl : MonoBehaviour
         //get _moveSpeed
         if (_currentCharacterIndex < _characterList.Count)
         {
-            _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _moveSpeed, 2, 100f);
+            _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _moveSpeed, 2, 6f);
             _currentCharacterIndex++;
         }
+        else
+        {
+            LevelWon();
+        }
+	}
+
+    private void LevelLost()
+    {
+		_characterList.Clear();
+		_losePanel.gameObject.SetActive(true);
+	}
+
+    private void LevelWon()
+    {
+		_winPanel.gameObject.SetActive(true);
 	}
 }

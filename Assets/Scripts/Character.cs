@@ -71,6 +71,7 @@ public class Character : MonoBehaviour
 		Actions.OnCured += StopTimer;
 		Actions.OnHit += ChangeSprite;
         Actions.OnHitFinished += ChangeSprite;
+		Actions.OnLostLevel += GetsAngry;
 	}
 
 	protected void OnDisable()
@@ -79,6 +80,7 @@ public class Character : MonoBehaviour
 		Actions.OnCured -= StopTimer;
 		Actions.OnHit -= ChangeSprite;
 		Actions.OnHitFinished -= ChangeSprite;
+		Actions.OnLostLevel -= GetsAngry;
 	}
 
 	protected void Start()
@@ -273,5 +275,10 @@ public class Character : MonoBehaviour
 		System.Random rng = new System.Random();
 		List<OrderSymbol> shuffledList = list.OrderBy(x => rng.Next()).ToList();
         return shuffledList;
+	}
+
+	private void GetsAngry()
+	{
+		_currentState = State.ANGRY;
 	}
 }

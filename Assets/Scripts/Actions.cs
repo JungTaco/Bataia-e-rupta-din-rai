@@ -10,4 +10,6 @@ public static class Actions
 	public static Action OnWaitingTimerEnded;
 	public static Action OnMistakeMade;
 	public static Action OnLeft;
+	public static Action OnLostLevel;
+	public static Action OnWonLevel;
 }

@@ -53,8 +53,7 @@ public class MainCharacterControl : MonoBehaviour
 
     private void Die()
     {
-        //invoke action pentru game over?
-        Debug.Log("ai murit");
+        Actions.OnLostLevel?.Invoke();
     }
 
     private void Hit(Vector3 pos)
