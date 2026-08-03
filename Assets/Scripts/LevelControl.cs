@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -17,29 +18,35 @@ public class LevelControl : MonoBehaviour
     private DialogueBox _dialogueBox;
 	[SerializeField]
 	private int _currentLevel;
+	[SerializeField]
+	private Camera _camera;
+	[SerializeField]
+	private List<Transform> _queuePositions = new List<Transform>();
 	private CharacterSpawner _spawner;
     //private Character _currentCharacter;
     //private Character _nextCharacter;
     private int _currentCharacterIndex;
-	
 	private float _currentCharacterMoveSpeed;
     private int _currentCharacterPointNumber;
-    private float _currentCharacterTimer;
-    private enum Phase {EASY, MEDIUM, HARD};
+    private float _currentCharacterPatienceTimer;
+	private float _nextQueueCharacterTimer;
+	private int _maxQueueNumber = 3;
+	private List<Character> _queue = new List<Character>();
+	private enum Phase {EASY, MEDIUM, HARD};
     private Phase _currentPhase = Phase.EASY;
 
 	private void OnEnable()
 	{
-        Actions.OnLeft += SpawnCharacter;
-        Actions.OnWaitingTimerEnded += SpawnCharacter;
+        Actions.OnLeft += CheckCharacterInQueue;
+        Actions.OnWaitingTimerEnded += CheckCharacterInQueue;
         Actions.OnLostLevel += LevelLost;
 		Actions.OnLevelPhaseChanged += DecideCurrentCharacterVariables;
 	}
 
 	private void OnDisable()
 	{
-		Actions.OnLeft -= SpawnCharacter;
-		Actions.OnWaitingTimerEnded -= SpawnCharacter;
+		Actions.OnLeft -= CheckCharacterInQueue;
+		Actions.OnWaitingTimerEnded -= CheckCharacterInQueue;
 		Actions.OnLostLevel -= LevelLost;
 		Actions.OnLevelPhaseChanged -= DecideCurrentCharacterVariables;
 	}
@@ -48,11 +55,13 @@ public class LevelControl : MonoBehaviour
 	void Start()
     {
 		DecideCurrentCharacterVariables();
+		//CalculateQueuePositions();
 		_spawner = CharacterSpawner.Instance;
         _currentCharacterIndex = 0;
         _winPanel.gameObject.SetActive(false);
         _losePanel.gameObject.SetActive(false);
-		SpawnCharacter();
+		StartCoroutine(QueueTimerCoroutine());
+		SpawnCharacter(false, 0);
 	}
 
     // Update is called once per frame
@@ -61,13 +70,13 @@ public class LevelControl : MonoBehaviour
         
     }
 
-    private void SpawnCharacter()
+    private void SpawnCharacter(bool isQueueing, float queueXPos)
     {
-        //get _moveSpeed
         if (_currentCharacterIndex < _characterList.Count)
         {
-            //null unde nu vreau sa dau dialogueBox
-            _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _currentCharacterMoveSpeed, _currentCharacterPointNumber, _currentCharacterTimer, false, _dialoguePos, _dialogueBox);
+			//null unde nu vreau sa dau dialogueBox
+			//_spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _currentCharacterMoveSpeed, _currentCharacterPointNumber, _currentCharacterPatienceTimer, 0, false, _dialoguePos, _dialogueBox);
+			_spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _currentCharacterMoveSpeed, _currentCharacterPointNumber, 100, isQueueing, queueXPos, false, _dialoguePos, _dialogueBox);
             _currentCharacterIndex++;
 			DecidePhase();
 		}
@@ -82,6 +91,7 @@ public class LevelControl : MonoBehaviour
         DecideCurrentCharacterMoveSpeed();
 		DecideCurrentCharacterPointNumber();
 		DecideCurrentCharacterTimer();
+		DecideNextQueueCharacterTimer();
 	}
 
 	private void DecideCurrentCharacterMoveSpeed()
@@ -125,13 +135,13 @@ public class LevelControl : MonoBehaviour
 		switch (_currentPhase)
 		{
 			case Phase.EASY:
-				_currentCharacterTimer = 6;
+				_currentCharacterPatienceTimer = 6;
 				break;
 			case Phase.MEDIUM:
-				_currentCharacterTimer = 5;
+				_currentCharacterPatienceTimer = 5;
 				break;
 			case Phase.HARD:
-				_currentCharacterTimer = 3;
+				_currentCharacterPatienceTimer = 3;
 				break;
 			default:
 				break;
@@ -153,6 +163,55 @@ public class LevelControl : MonoBehaviour
 				Actions.OnLevelPhaseChanged?.Invoke();
 			}
 		}
+		else if (_currentLevel == 3)
+		{
+			if (_currentCharacterIndex == 5)
+			{
+				_currentPhase = Phase.MEDIUM;
+				Actions.OnLevelPhaseChanged?.Invoke();
+			}
+			else if (_currentCharacterIndex == 10)
+			{
+				_currentPhase = Phase.HARD;
+				Actions.OnLevelPhaseChanged?.Invoke();
+			}
+		}
+	}
+
+	private void DecideNextQueueCharacterTimer()
+	{
+		_nextQueueCharacterTimer = 2f;
+	}
+
+	//private void CalculateQueuePositions()
+	//{
+	//	_queueXPos.Add(3 * _camera.orthographicSize / 8);
+	//	_queueXPos.Add(_camera.orthographicSize / 4);
+	//	_queueXPos.Add(_camera.orthographicSize / 8);
+	//}
+
+	private void CheckCharacterInQueue()
+	{
+		if(_queue.Count > 0)
+		{
+			AdvanceQueue();
+		}
+		else
+		{
+			SpawnCharacter(false,0);
+		}
+	}
+
+	private void AdvanceQueue()
+	{
+		_queue[0].SetState2(Character.State.UNCURED);
+		Debug.Log(_queue[0].GetCurrentState());
+		//Debug.Log(_queue[0].transform.position);
+		_queue.RemoveAt(0);
+		for(int i=0;i<_queue.Count;i++)
+		{
+			_queue[i].SetQueueXPos(_queuePositions[i].transform.position.x);
+		}
 	}
 
 	private void LevelLost()
@@ -164,5 +223,19 @@ public class LevelControl : MonoBehaviour
     private void LevelWon()
     {
 		_winPanel.gameObject.SetActive(true);
+	}
+
+	private IEnumerator QueueTimerCoroutine()
+	{
+		while (true)
+		{
+			yield return new WaitForSeconds(_nextQueueCharacterTimer);
+			if (_currentCharacterIndex < _characterList.Count && _queue.Count < _maxQueueNumber)
+			{
+				_queue.Add(_characterList[_currentCharacterIndex]);
+				SpawnCharacter(true, _queuePositions[_queue.Count - 1].position.x);
+				//SpawnCharacter(true, _camera.orthographicSize);
+			}
+		}
 	}
 }

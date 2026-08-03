@@ -30,22 +30,38 @@ public class Character : MonoBehaviour
 	protected SpriteRenderer _spriteRenderer;
 	protected int _painPointNumber;
 	protected float _timer;
-	protected float _orthographicScreenWidth;
+	protected float _OrthographicScreenWidth;
 	protected bool _isBeingHit;
+	protected float _queueXPos;
 	protected Transform _dialoguePos;
 
-	public enum State {TALKING, WAITING, UNCURED, CURED, ANGRY};
-	protected State _currentState = State.WAITING; 
+	public enum State {TALKING, QUEUEING, UNCURED, CURED, ANGRY};
+	protected State _currentState; 
 
     public State GetCurrentState()
     {
         return _currentState;
     }
 
-    public void SetCurrentState(State newState)
+    public void SetState(State newState)
     {
+		//Debug.Log("TEST: "+this+" param: "+newState+ " currentState: "+_currentState);
         _currentState = newState;
-    }
+		//Debug.Log("new current state: "+_currentState);
+	}
+
+    public void SetState2(State newState)
+    {
+		Debug.Log("TEST: "+this+" param: "+newState+ " currentState: "+_currentState);
+        _currentState = newState;
+		Debug.Log("new current state: "+_currentState);
+
+	}
+
+	public State GetState()
+	{
+		return _currentState;
+	}
 
     public void SetMoveSpeed(float newMoveSpeed)
     {
@@ -61,9 +77,14 @@ public class Character : MonoBehaviour
 	{
         _timer = timer;
 	}
+
+	public void SetQueueXPos(float XPos)
+	{
+		_queueXPos = XPos;
+	}
 	public void SetOrthographicScreenWidth (float newOrthographicScreenWidth)
     {
-        _orthographicScreenWidth = newOrthographicScreenWidth;
+        _OrthographicScreenWidth = newOrthographicScreenWidth;
     }
 
 	public void SetDialoguePos(Transform dialoguePos)
@@ -96,34 +117,36 @@ public class Character : MonoBehaviour
 		SpawnSymbols();
         _expectedPressingOrder = GetExpectedPressingOrder();
         _isBeingHit = false;
-		StartCoroutine(CharacterTimer());
+		StartCoroutine(CharacterTimerCoroutine());
 	}
 
 	protected void Update()
     {
-        if((_currentState == State.UNCURED || _currentState == State.TALKING) && transform.position.x < 0)
+		Debug.Log(this + " state: "+_currentState);
+		if ((_currentState == State.UNCURED || _currentState == State.TALKING) && transform.position.x < 0)
         {
-            MoveToCenter();
+			
+            Move();
 		}
         else if (_currentState == State.UNCURED)
         {
             CheckRightKeysArepressed();			
 		}
-        else if(_currentState == State.CURED && !_isBeingHit && transform.position.x < (_orthographicScreenWidth*1.5))
+        else if((_currentState == State.CURED || _currentState == State.ANGRY) && !_isBeingHit && transform.position.x < (_OrthographicScreenWidth * 1.5))
         {
             Leave();
         }
-		else if(_currentState == State.ANGRY && !_isBeingHit && transform.position.x < (_orthographicScreenWidth * 1.5))
+		else if(_currentState == State.QUEUEING && transform.position.x < _queueXPos)
 		{
-			Leave();
+			Move();
 		}
-		else if (transform.position.x >= (_orthographicScreenWidth * 1.5))
+		else if (transform.position.x >= (_OrthographicScreenWidth * 1.5))
 		{
 			Destroy(gameObject);
 		}
 	}
 
-	protected void MoveToCenter()
+	protected void Move()
     {
 		float newPosX = transform.position.x + 0.5f * _moveSpeed;
 		transform.position = new Vector3(newPosX, transform.position.y, transform.position.z);
@@ -197,7 +220,7 @@ public class Character : MonoBehaviour
 			if (_currentExpectedKeyIndex < _painPointNumber - 1)
             {
 				_currentExpectedKeyIndex++;
-                StartCoroutine(HitTimer());
+                StartCoroutine(HitTimerCoroutine());
 			}       
 			else
 			{
@@ -229,18 +252,18 @@ public class Character : MonoBehaviour
 		}
 	}
 
-	protected IEnumerator HitTimer()
+	protected IEnumerator HitTimerCoroutine()
     {
 		while (true)
 		{
 			yield return new WaitForSeconds(.2f);
             _isBeingHit = false;
             Actions.OnHitFinished?.Invoke();
-            StopCoroutine(HitTimer());
+            StopCoroutine(HitTimerCoroutine());
 		}
 	}
 
-	protected IEnumerator CharacterTimer()
+	protected IEnumerator CharacterTimerCoroutine()
     {
 		while (true)
 		{
@@ -248,13 +271,13 @@ public class Character : MonoBehaviour
 			_currentState = State.ANGRY;
 			Actions.OnMistakeMade?.Invoke();
 			Actions.OnLeft?.Invoke();
-			StopCoroutine(CharacterTimer());
+			StopCoroutine(CharacterTimerCoroutine());
 		}
 	}
 
 	protected void StopTimer()
 	{
-		StopCoroutine(CharacterTimer());
+		StopCoroutine(CharacterTimerCoroutine());
 	}
 
 	protected List<OrderSymbol> TruncateList(List<OrderSymbol> list)

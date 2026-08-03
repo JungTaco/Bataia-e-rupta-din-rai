@@ -19,7 +19,7 @@ public class CrossCharacter : Character
 		SpawnSymbols();
 		_expectedPressingOrder = GetExpectedPressingOrder();
 		_isBeingHit = false;
-		StartCoroutine(CharacterTimer());
+		StartCoroutine(CharacterTimerCoroutine());
 	}
 
     // Update is called once per frame
@@ -47,7 +47,7 @@ public class CrossCharacter : Character
 			if (_currentExpectedKeyIndex < _painPointNumber - 1)
 			{
 				_currentExpectedKeyIndex++;
-				StartCoroutine(HitTimer());
+				StartCoroutine(HitTimerCoroutine());
 			}
 			else
 			{

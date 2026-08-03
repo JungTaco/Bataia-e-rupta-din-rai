@@ -1,48 +1,60 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterSpawner : MonoBehaviour
 {
     public static CharacterSpawner Instance { get; private set; }
-    private Character _currentCharacter;
-    private Character _nextCharacter;
-    public Canvas canvas;
-    public Camera camera;
+	[SerializeField]
+	private Canvas _canvas;
+	[SerializeField]
+	private Camera _camera;
+	private Character _currentCharacter;
+	//private Character _nextCharacter;
+	private float _OrthographicScreenWidth;
+	
 
 	private void Awake()
 	{
 		Instance = this;
 	}
 
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
     {
-        
-    }
+		_OrthographicScreenWidth = _camera.orthographicSize * _camera.aspect;
+	}
 
-    // Update is called once per frame
     void Update()
     {
         
     }
 
-    public void SpawnCharacter(Character character, float moveSpeed, int painPointNumber, float timer, bool isTalking, Transform dialoguePos, DialogueBox dialogueBox)
+    public void SpawnCharacter(Character character, float moveSpeed, int painPointNumber, float timer, bool isQueueing, float queueXPos, bool isTalking, Transform dialoguePos, DialogueBox dialogueBox)
     {
         //Instantiates character outside of the screen
-		float orthographicScreenWidth = camera.orthographicSize * camera.aspect;
-		Vector3 pos = new Vector3(-orthographicScreenWidth*1.5f, 0, 0);
-		_currentCharacter = Instantiate(character, pos, Quaternion.identity, canvas.transform);
+		Vector3 pos = new Vector3(-_OrthographicScreenWidth*1.5f, 0, 0);
+		_currentCharacter = Instantiate(character, pos, Quaternion.identity, _canvas.transform);
         _currentCharacter.SetMoveSpeed(moveSpeed);
         if (isTalking)
         {
-			_currentCharacter.SetCurrentState(Character.State.TALKING);
+			_currentCharacter.SetState(Character.State.TALKING);
             _currentCharacter.SetDialoguePos(dialoguePos);
 		}
         else
         {
-			_currentCharacter.SetCurrentState(Character.State.UNCURED);
+			if (isQueueing)
+			{
+				_currentCharacter.SetQueueXPos(queueXPos);
+				_currentCharacter.SetState(Character.State.QUEUEING);
+			}
+			else
+			{
+				_currentCharacter.SetState(Character.State.UNCURED);
+			}
 		}
 		_currentCharacter.SetPainPointNumber(painPointNumber);
         _currentCharacter.SetTimer(timer);
-        _currentCharacter.SetOrthographicScreenWidth(orthographicScreenWidth);
+        
+        _currentCharacter.SetOrthographicScreenWidth(_OrthographicScreenWidth);
 	}
 }
