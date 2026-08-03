@@ -11,13 +11,20 @@ public class LevelControl : MonoBehaviour
     private SpriteRenderer _winPanel;
 	[SerializeField]
 	private SpriteRenderer _losePanel;
+    [SerializeField]
+    private Transform _dialoguePos;
+    [SerializeField]
+    private DialogueBox _dialogueBox;
+	[SerializeField]
+	private int _currentLevel;
 	private CharacterSpawner _spawner;
     //private Character _currentCharacter;
     //private Character _nextCharacter;
     private int _currentCharacterIndex;
-    //serialized si il pun din inspector?
-    private int _currentLevel = 1;
-	private float _moveSpeed = 0.15f;
+	
+	private float _currentCharacterMoveSpeed;
+    private int _currentCharacterPointNumber;
+    private float _currentCharacterTimer;
     private enum Phase {EASY, MEDIUM, HARD};
     private Phase _currentPhase = Phase.EASY;
 
@@ -26,6 +33,7 @@ public class LevelControl : MonoBehaviour
         Actions.OnLeft += SpawnCharacter;
         Actions.OnWaitingTimerEnded += SpawnCharacter;
         Actions.OnLostLevel += LevelLost;
+		Actions.OnLevelPhaseChanged += DecideCurrentCharacterVariables;
 	}
 
 	private void OnDisable()
@@ -33,43 +41,17 @@ public class LevelControl : MonoBehaviour
 		Actions.OnLeft -= SpawnCharacter;
 		Actions.OnWaitingTimerEnded -= SpawnCharacter;
 		Actions.OnLostLevel -= LevelLost;
+		Actions.OnLevelPhaseChanged -= DecideCurrentCharacterVariables;
 	}
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
     {
-
-        //switch (_currentLevel)
-        //{
-        //    case 1:
-        //        switch (_currentPhase)
-        //        {
-        //            case Phase.EASY:
-        //                break;
-        //            case Phase.MEDIUM:
-        //                break;
-        //            case Phase.HARD:
-        //                break;
-        //            default:
-        //                Debug.Log("invalid level phase");
-        //                break;
-        //        }
-        //        break;
-        //    case 2: 
-        //        break;
-        //    case 3:
-        //        break;
-        //    case 4:
-        //        break;
-        //    default:
-        //        Debug.Log("Invalid level");
-        //        break;
-        //}
+		DecideCurrentCharacterVariables();
 		_spawner = CharacterSpawner.Instance;
         _currentCharacterIndex = 0;
         _winPanel.gameObject.SetActive(false);
         _losePanel.gameObject.SetActive(false);
-		//_characterList[_currentCharacterIndex].gameObject.SetActive(true);
 		SpawnCharacter();
 	}
 
@@ -84,16 +66,96 @@ public class LevelControl : MonoBehaviour
         //get _moveSpeed
         if (_currentCharacterIndex < _characterList.Count)
         {
-            _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _moveSpeed, 2, 6f);
+            //null unde nu vreau sa dau dialogueBox
+            _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _currentCharacterMoveSpeed, _currentCharacterPointNumber, _currentCharacterTimer, false, _dialoguePos, _dialogueBox);
             _currentCharacterIndex++;
-        }
+			DecidePhase();
+		}
         else
         {
             LevelWon();
         }
 	}
 
-    private void LevelLost()
+    private void DecideCurrentCharacterVariables()
+    {
+        DecideCurrentCharacterMoveSpeed();
+		DecideCurrentCharacterPointNumber();
+		DecideCurrentCharacterTimer();
+	}
+
+	private void DecideCurrentCharacterMoveSpeed()
+    {
+        switch (_currentPhase)
+        {
+            case Phase.EASY:
+				_currentCharacterMoveSpeed = .15f;
+                break;
+            case Phase.MEDIUM:
+                _currentCharacterMoveSpeed = .15f;
+				break;
+			case Phase.HARD:
+                _currentCharacterMoveSpeed = .5f;
+				break;
+			default:
+                break;
+		}     
+    }
+
+	private void DecideCurrentCharacterPointNumber()
+	{
+		switch (_currentPhase)
+		{
+			case Phase.EASY:
+				_currentCharacterPointNumber = 2;
+				break;
+			case Phase.MEDIUM:
+				_currentCharacterPointNumber = 3;
+				break;
+			case Phase.HARD:
+				_currentCharacterPointNumber = 4;
+				break;
+			default:
+				break;
+		}
+	}
+
+	private void DecideCurrentCharacterTimer()
+	{
+		switch (_currentPhase)
+		{
+			case Phase.EASY:
+				_currentCharacterTimer = 6;
+				break;
+			case Phase.MEDIUM:
+				_currentCharacterTimer = 5;
+				break;
+			case Phase.HARD:
+				_currentCharacterTimer = 3;
+				break;
+			default:
+				break;
+		}
+	}
+
+	private void DecidePhase()
+	{
+		if (_currentLevel == 1)
+		{
+			if (_currentCharacterIndex == 5)
+			{
+				_currentPhase = Phase.MEDIUM;
+				Actions.OnLevelPhaseChanged?.Invoke();
+			}
+			else if (_currentCharacterIndex == 10)
+			{
+				_currentPhase = Phase.HARD;
+				Actions.OnLevelPhaseChanged?.Invoke();
+			}
+		}
+	}
+
+	private void LevelLost()
     {
 		_characterList.Clear();
 		_losePanel.gameObject.SetActive(true);

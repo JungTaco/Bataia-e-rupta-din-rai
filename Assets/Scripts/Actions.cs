@@ -12,4 +12,5 @@ public static class Actions
 	public static Action OnLeft;
 	public static Action OnLostLevel;
 	public static Action OnWonLevel;
+	public static Action OnLevelPhaseChanged;
 }

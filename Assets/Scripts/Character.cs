@@ -32,8 +32,9 @@ public class Character : MonoBehaviour
 	protected float _timer;
 	protected float _orthographicScreenWidth;
 	protected bool _isBeingHit;
+	protected Transform _dialoguePos;
 
-	public enum State {WAITING, UNCURED, CURED, ANGRY};
+	public enum State {TALKING, WAITING, UNCURED, CURED, ANGRY};
 	protected State _currentState = State.WAITING; 
 
     public State GetCurrentState()
@@ -65,6 +66,11 @@ public class Character : MonoBehaviour
         _orthographicScreenWidth = newOrthographicScreenWidth;
     }
 
+	public void SetDialoguePos(Transform dialoguePos)
+	{
+		_dialoguePos = dialoguePos;
+	}
+
 	protected void OnEnable()
 	{
         Actions.OnCured += ChangeSprite;
@@ -95,7 +101,7 @@ public class Character : MonoBehaviour
 
 	protected void Update()
     {
-        if(_currentState == State.UNCURED && transform.position.x < 0)
+        if((_currentState == State.UNCURED || _currentState == State.TALKING) && transform.position.x < 0)
         {
             MoveToCenter();
 		}
