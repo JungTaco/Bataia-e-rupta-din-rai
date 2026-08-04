@@ -3,6 +3,7 @@ using NUnit.Framework.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,6 +25,7 @@ public class Character : MonoBehaviour
 	protected List<PainPoint> _enabledPainPoints = new List<PainPoint>();
 	protected List<Key> _expectedPressingOrder = new List<Key>();
 	protected List<OrderSymbol> _neededOrderSymbols = new List<OrderSymbol>();
+	protected List<OrderSymbol> _spawnedOrderSymbols = new List<OrderSymbol>();
 	protected SortedDictionary<int, PainPoint> _painPointsOrder = new SortedDictionary<int, PainPoint>();
 	protected int _currentExpectedKeyIndex = 0;
 	protected float _moveSpeed;
@@ -34,6 +36,7 @@ public class Character : MonoBehaviour
 	protected bool _isBeingHit;
 	protected float _queueXPos;
 	protected Transform _dialoguePos;
+	protected bool _symbolsSpawned;
 
 	public enum State {TALKING, QUEUEING, UNCURED, CURED, ANGRY};
 	protected State _currentState; 
@@ -45,17 +48,7 @@ public class Character : MonoBehaviour
 
     public void SetState(State newState)
     {
-		//Debug.Log("TEST: "+this+" param: "+newState+ " currentState: "+_currentState);
         _currentState = newState;
-		//Debug.Log("new current state: "+_currentState);
-	}
-
-    public void SetState2(State newState)
-    {
-		Debug.Log("TEST: "+this+" param: "+newState+ " currentState: "+_currentState);
-        _currentState = newState;
-		Debug.Log("new current state: "+_currentState);
-
 	}
 
 	public State GetState()
@@ -110,22 +103,24 @@ public class Character : MonoBehaviour
 		Actions.OnLostLevel -= GetsAngry;
 	}
 
+	private void Awake()
+	{
+		_spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+		_symbolsSpawned = false;
+	}
 	protected void Start()
-    {
-        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+	{
 		DecideVisiblePainPoints();
 		SpawnSymbols();
-        _expectedPressingOrder = GetExpectedPressingOrder();
+		_expectedPressingOrder = GetExpectedPressingOrder();
         _isBeingHit = false;
 		StartCoroutine(CharacterTimerCoroutine());
 	}
 
 	protected void Update()
     {
-		Debug.Log(this + " state: "+_currentState);
 		if ((_currentState == State.UNCURED || _currentState == State.TALKING) && transform.position.x < 0)
         {
-			
             Move();
 		}
         else if (_currentState == State.UNCURED)
@@ -143,6 +138,47 @@ public class Character : MonoBehaviour
 		else if (transform.position.x >= (_OrthographicScreenWidth * 1.5))
 		{
 			Destroy(gameObject);
+		}
+	}
+
+	public void ChangeOirderInLayer(int modification)
+	{
+		if (!_symbolsSpawned)
+		{
+			StartCoroutine(SymbolsSpawnedChecker(modification));
+		}
+		else
+		{
+			_spriteRenderer.sortingOrder += modification;
+			var painPointsSpriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+			foreach (SpriteRenderer ppsr in painPointsSpriteRenderers)
+			{
+				//ignore parent
+				if (ppsr != _spriteRenderer)
+				{
+					ppsr.sortingOrder = _spriteRenderer.sortingOrder + 1;
+
+					foreach(OrderSymbol os in _spawnedOrderSymbols)
+					{
+						os.GetComponent<SpriteRenderer>().sortingOrder = _spriteRenderer.sortingOrder + 2;
+					}
+					//var symbolsSpriteRenderers = ppsr.GetComponentsInChildren<SpriteRenderer>();
+					//foreach (SpriteRenderer osr in symbolsSpriteRenderers)
+					//{
+					//	//ignore parent
+					//	if (osr != ppsr)
+					//	{
+					//		Debug.Log("THIS: " + this + " PAIN POINT: " + ppsr + " SYMBOL: " + osr);
+					//		//Debug.Log(_spriteRenderer.sortingOrder + 2);
+					//		Debug.Log("INITAL ORDER: "+ osr.sortingOrder);
+					//		//osr.sortingOrder = _spriteRenderer.sortingOrder + 2;
+					//		osr.sortingOrder = 100;
+					//		Debug.Log("FINAL ORDER: " + osr.sortingOrder);
+					//	}
+					//}
+					//Debug.Log(ppsr + " "+symbolsSpriteRenderers.Count());
+				}
+			}
 		}
 	}
 
@@ -191,9 +227,11 @@ public class Character : MonoBehaviour
 	    _neededOrderSymbols = GetNeededOrderSymbols();
         for(int i=0; i < _enabledPainPoints.Count; i++)
         {
-            Instantiate(_neededOrderSymbols[i], _enabledPainPoints[i].transform.position, Quaternion.identity, _enabledPainPoints[i].transform);
+            OrderSymbol orderSymbol = Instantiate(_neededOrderSymbols[i], _enabledPainPoints[i].transform.position, Quaternion.identity, _enabledPainPoints[i].transform);
+			_spawnedOrderSymbols.Add(orderSymbol);
 		}
-    }
+		_symbolsSpawned = true;
+	}
 
 	protected List<Key> GetExpectedPressingOrder()
     {
@@ -247,7 +285,6 @@ public class Character : MonoBehaviour
 		}
 		else if (_currentState == State.UNCURED)
 		{
-			//Debug.Log(_spriteRenderer);
 			_spriteRenderer.sprite = _uncuredSprite;
 		}
 	}
@@ -273,6 +310,16 @@ public class Character : MonoBehaviour
 			Actions.OnLeft?.Invoke();
 			StopCoroutine(CharacterTimerCoroutine());
 		}
+	}
+
+	protected IEnumerator SymbolsSpawnedChecker(int modification)
+	{
+		while (!_symbolsSpawned)
+		{
+			yield return null;
+		}
+		ChangeOirderInLayer(modification);
+		StopCoroutine(SymbolsSpawnedChecker(modification));
 	}
 
 	protected void StopTimer()

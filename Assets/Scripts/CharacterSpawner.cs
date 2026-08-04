@@ -29,9 +29,9 @@ public class CharacterSpawner : MonoBehaviour
         
     }
 
-    public void SpawnCharacter(Character character, float moveSpeed, int painPointNumber, float timer, bool isQueueing, float queueXPos, bool isTalking, Transform dialoguePos, DialogueBox dialogueBox)
+    public Character SpawnCharacter(Character character, float moveSpeed, int painPointNumber, float timer, bool isQueueing, float queueXPos, bool isTalking, Transform dialoguePos, DialogueBox dialogueBox)
     {
-        //Instantiates character outside of the screen
+		//Instantiates character outside of the screen
 		Vector3 pos = new Vector3(-_OrthographicScreenWidth*1.5f, 0, 0);
 		_currentCharacter = Instantiate(character, pos, Quaternion.identity, _canvas.transform);
         _currentCharacter.SetMoveSpeed(moveSpeed);
@@ -56,5 +56,12 @@ public class CharacterSpawner : MonoBehaviour
         _currentCharacter.SetTimer(timer);
         
         _currentCharacter.SetOrthographicScreenWidth(_OrthographicScreenWidth);
+
+		//FOR TESTING
+		//if (isQueueing)
+		//{
+		//	_currentCharacter.SetTimer(3f);
+		//}
+		return _currentCharacter;
 	}
 }

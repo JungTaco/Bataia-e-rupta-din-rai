@@ -70,13 +70,14 @@ public class LevelControl : MonoBehaviour
         
     }
 
-    private void SpawnCharacter(bool isQueueing, float queueXPos)
+    private Character SpawnCharacter(bool isQueueing, float queueXPos)
     {
+		Character character = null;
         if (_currentCharacterIndex < _characterList.Count)
         {
 			//null unde nu vreau sa dau dialogueBox
 			//_spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _currentCharacterMoveSpeed, _currentCharacterPointNumber, _currentCharacterPatienceTimer, 0, false, _dialoguePos, _dialogueBox);
-			_spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _currentCharacterMoveSpeed, _currentCharacterPointNumber, 100, isQueueing, queueXPos, false, _dialoguePos, _dialogueBox);
+			character = _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _currentCharacterMoveSpeed, 4, 1000, isQueueing, queueXPos, false, _dialoguePos, _dialogueBox);
             _currentCharacterIndex++;
 			DecidePhase();
 		}
@@ -84,6 +85,7 @@ public class LevelControl : MonoBehaviour
         {
             LevelWon();
         }
+		return character;
 	}
 
     private void DecideCurrentCharacterVariables()
@@ -204,13 +206,16 @@ public class LevelControl : MonoBehaviour
 
 	private void AdvanceQueue()
 	{
-		_queue[0].SetState2(Character.State.UNCURED);
-		Debug.Log(_queue[0].GetCurrentState());
-		//Debug.Log(_queue[0].transform.position);
+		if (_queue[0].GetCurrentState() == Character.State.QUEUEING)
+		{
+			_queue[0].SetState(Character.State.UNCURED);
+		}
+		_queue[0].ChangeOirderInLayer(1);
 		_queue.RemoveAt(0);
 		for(int i=0;i<_queue.Count;i++)
 		{
 			_queue[i].SetQueueXPos(_queuePositions[i].transform.position.x);
+			_queue[i].ChangeOirderInLayer(1);
 		}
 	}
 
@@ -232,9 +237,9 @@ public class LevelControl : MonoBehaviour
 			yield return new WaitForSeconds(_nextQueueCharacterTimer);
 			if (_currentCharacterIndex < _characterList.Count && _queue.Count < _maxQueueNumber)
 			{
-				_queue.Add(_characterList[_currentCharacterIndex]);
-				SpawnCharacter(true, _queuePositions[_queue.Count - 1].position.x);
-				//SpawnCharacter(true, _camera.orthographicSize);
+				Character c = SpawnCharacter(true, _queuePositions[_queue.Count].position.x);
+				_queue.Add(c);
+				c.ChangeOirderInLayer(-_queue.Count*3);
 			}
 		}
 	}
