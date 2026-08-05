@@ -15,7 +15,6 @@ public class MainCharacterControl : MonoBehaviour
         Actions.OnMistakeMade += LoseLife;
         Actions.OnHitCoordinates += Hit;
         Actions.OnHitFinished += FinishHit;
-        Actions.OnRestartLevel += ResetLives;
 	}
 
 	private void OnDisable()
@@ -23,7 +22,6 @@ public class MainCharacterControl : MonoBehaviour
 		Actions.OnMistakeMade -= LoseLife;
 		Actions.OnHitCoordinates -= Hit;
 		Actions.OnHitFinished -= FinishHit;
-		Actions.OnRestartLevel -= ResetLives;
 	}
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -69,9 +67,4 @@ public class MainCharacterControl : MonoBehaviour
 		_idleHand.gameObject.SetActive(true);
 		_hittingHand.gameObject.SetActive(false);
 	}
-
-    private void ResetLives()
-    {
-        _lives = 3;
-    }
 }

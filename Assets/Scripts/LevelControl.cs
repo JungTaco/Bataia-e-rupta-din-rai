@@ -75,13 +75,14 @@ public class LevelControl : MonoBehaviour
 
 	public void RestartLevel()
 	{
-		_currentPhase = Phase.EASY;
-		DecideCurrentCharacterVariables();
-		_currentCharacterIndex = 0;
-		_winPanel.gameObject.SetActive(false);
-		_losePanel.gameObject.SetActive(false);
-		SpawnCharacter(false, 0);
-		Actions.OnRestartLevel?.Invoke();
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		//_currentPhase = Phase.EASY;
+		//DecideCurrentCharacterVariables();
+		//_currentCharacterIndex = 0;
+		//_winPanel.gameObject.SetActive(false);
+		//_losePanel.gameObject.SetActive(false);
+		//SpawnCharacter(false, 0);
+		//Actions.OnRestartLevel?.Invoke();
 	}
 
     private Character SpawnCharacter(bool isQueueing, float queueXPos)
@@ -112,21 +113,58 @@ public class LevelControl : MonoBehaviour
 
 	private void DecideCurrentCharacterMoveSpeed()
     {
-        switch (_currentPhase)
-        {
-            case Phase.EASY:
-				_currentCharacterMoveSpeed = .5f;
-                break;
-            case Phase.MEDIUM:
-                _currentCharacterMoveSpeed = .5f;
-				break;
-			case Phase.HARD:
-                _currentCharacterMoveSpeed = .5f;
-				break;
-			default:
-                break;
-		}     
-    }
+		if(_currentLevel == 1)
+		{
+			switch (_currentPhase)
+			{
+				case Phase.EASY:
+					_currentCharacterMoveSpeed = .5f;
+					break;
+				case Phase.MEDIUM:
+					_currentCharacterMoveSpeed = .5f;
+					break;
+				case Phase.HARD:
+					_currentCharacterMoveSpeed = .5f;
+					break;
+				default:
+					break;
+			}
+		}
+		else if (_currentLevel == 2)
+		{
+			switch (_currentPhase)
+			{
+				case Phase.EASY:
+					_currentCharacterMoveSpeed = .7f;
+					break;
+				case Phase.MEDIUM:
+					_currentCharacterMoveSpeed = .7f;
+					break;
+				case Phase.HARD:
+					_currentCharacterMoveSpeed = .7f;
+					break;
+				default:
+					break;
+			}
+		}
+		else if (_currentLevel == 3)
+		{
+			switch (_currentPhase)
+			{
+				case Phase.EASY:
+					_currentCharacterMoveSpeed = .6f;
+					break;
+				case Phase.MEDIUM:
+					_currentCharacterMoveSpeed = .6f;
+					break;
+				case Phase.HARD:
+					_currentCharacterMoveSpeed = .6f;
+					break;
+				default:
+					break;
+			}
+		}
+	}
 
 	private void DecideCurrentCharacterPointNumber()
 	{
@@ -147,16 +185,31 @@ public class LevelControl : MonoBehaviour
 					break;
 			}
 		}
+		else if (_currentLevel == 2)
+		{
+			switch (_currentPhase)
+			{
+				case Phase.EASY:
+					_currentCharacterPointNumber = 3;
+					break;
+				case Phase.MEDIUM:
+					_currentCharacterPointNumber = 4;
+					break;
+				case Phase.HARD:
+					_currentCharacterPointNumber = 4;
+					break;
+				default:
+					break;
+			}
+		}
 		else if (_currentLevel == 3)
 		{
 			_currentCharacterPointNumber = 4;
-		}
-		
+		}		
 	}
 
 	private void DecideCurrentCharacterTimer()
 	{
-		//_currentCharacterPatienceTimer = 2;
 		if (_currentLevel == 1)
 		{
 			switch (_currentPhase)
@@ -174,6 +227,23 @@ public class LevelControl : MonoBehaviour
 					break;
 			}
 		}
+		else if (_currentLevel == 2)
+		{
+			switch (_currentPhase)
+			{
+				case Phase.EASY:
+					_currentCharacterPatienceTimer = 5;
+					break;
+				case Phase.MEDIUM:
+					_currentCharacterPatienceTimer = 5;
+					break;
+				case Phase.HARD:
+					_currentCharacterPatienceTimer = 5;
+					break;
+				default:
+					break;
+			}
+		}
 		else if (_currentLevel == 3)
 		{
 			switch (_currentPhase)
@@ -191,7 +261,7 @@ public class LevelControl : MonoBehaviour
 					break;
 			}
 		}
-			
+		_currentCharacterPatienceTimer = 100;
 	}
 
 	private void DecidePhase()
@@ -244,15 +314,33 @@ public class LevelControl : MonoBehaviour
 					break;
 			}
 		}
+		else if (_currentLevel == 2)
+		{
+			switch (_currentPhase)
+			{
+				case Phase.EASY:
+					_nextQueueCharacterTimer = 2f;
+					_nextQueueCharacterTimer = 2f;
+					break;
+				case Phase.MEDIUM:
+					_nextQueueCharacterTimer = .5f;
+					break;
+				case Phase.HARD:
+					_nextQueueCharacterTimer = .25f;
+					break;
+				default:
+					break;
+			}
+		}
 		else if (_currentLevel == 3)
 		{
 			switch (_currentPhase)
 			{
 				case Phase.EASY:
-					_nextQueueCharacterTimer = 10f;
+					_nextQueueCharacterTimer = 6f;
 					break;
 				case Phase.MEDIUM:
-					_nextQueueCharacterTimer = 8f;
+					_nextQueueCharacterTimer = 6f;
 					break;
 				case Phase.HARD:
 					_nextQueueCharacterTimer = 6f;
@@ -306,23 +394,23 @@ public class LevelControl : MonoBehaviour
 		{
 			_queue[0].SetState(Character.State.UNCURED);
 		}
-		_queue[0].ChangeOirderInLayer(1);
+		_queue[0].ChangeOirderInLayer(3);
 		_queue.RemoveAt(0);
 		for(int i=0;i<_queue.Count;i++)
 		{
 			_queue[i].SetQueueXPos(_queuePositions[i].transform.position.x);
-			_queue[i].ChangeOirderInLayer(1);
+			_queue[i].ChangeOirderInLayer(3);
 		}
 	}
 
 	private void LevelLost()
     {
 		_losePanel.gameObject.SetActive(true);
-		//_characterList.Clear();
 	}
 
     private void LevelWon()
     {
 		_winPanel.gameObject.SetActive(true);
+		Actions.OnWonLevel?.Invoke();
 	}
 }
