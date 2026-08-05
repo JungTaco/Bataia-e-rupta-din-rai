@@ -19,7 +19,7 @@ public class CrossCharacter : Character
 		SpawnSymbols();
 		_expectedPressingOrder = GetExpectedPressingOrder();
 		_isBeingHit = false;
-		StartCoroutine(CharacterTimerCoroutine());
+		//StartCoroutine(CharacterTimerCoroutine());
 	}
 
     // Update is called once per frame
@@ -28,6 +28,10 @@ public class CrossCharacter : Character
         base.Update();
     }
 
+	new void FixedUpdate()
+	{
+		base.FixedUpdate();
+	}
 	protected override void SpawnSymbols()
 	{
 		for (int i = 0; i < _enabledPainPoints.Count; i++)
@@ -47,7 +51,7 @@ public class CrossCharacter : Character
 			if (_currentExpectedKeyIndex < _painPointNumber - 1)
 			{
 				_currentExpectedKeyIndex++;
-				StartCoroutine(HitTimerCoroutine());
+				_isBeingHit = true;
 			}
 			else
 			{

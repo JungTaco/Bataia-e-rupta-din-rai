@@ -25,6 +25,11 @@ public class AminCharacter : Character
         base.Update();
     }
 
+	new void FixedUpdate()
+	{
+		base.FixedUpdate();
+	}
+
 	protected override void CheckRightKeysArepressed()
 	{
 		if (Keyboard.current[_expectedPressingOrder[_currentExpectedKeyIndex]].wasPressedThisFrame)
@@ -36,7 +41,7 @@ public class AminCharacter : Character
 			if (_currentExpectedKeyIndex < _painPointNumber - 1)
 			{
 				_currentExpectedKeyIndex++;
-				StartCoroutine(HitTimerCoroutine());
+				_isBeingHit = true;
 			}
 			else
 			{

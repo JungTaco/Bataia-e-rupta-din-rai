@@ -22,6 +22,8 @@ public class Character : MonoBehaviour
     protected List<PainPoint> _painPoints = new List<PainPoint>();
 	[SerializeField]
 	protected List<OrderSymbol> _orderSymbols = new List<OrderSymbol>();
+	[SerializeField]
+	protected Transform _wrongHitPosition;
 	protected List<PainPoint> _enabledPainPoints = new List<PainPoint>();
 	protected List<Key> _expectedPressingOrder = new List<Key>();
 	protected List<OrderSymbol> _neededOrderSymbols = new List<OrderSymbol>();
@@ -37,6 +39,9 @@ public class Character : MonoBehaviour
 	protected float _queueXPos;
 	protected Transform _dialoguePos;
 	protected bool _symbolsSpawned;
+	protected bool _timerActive;
+	protected float _isBeingHitTimerCurrentValue;
+	protected float _isBeingHitTimer;
 
 	public enum State {TALKING, QUEUEING, UNCURED, CURED, ANGRY};
 	protected State _currentState; 
@@ -114,7 +119,10 @@ public class Character : MonoBehaviour
 		SpawnSymbols();
 		_expectedPressingOrder = GetExpectedPressingOrder();
         _isBeingHit = false;
-		StartCoroutine(CharacterTimerCoroutine());
+		_timerActive = true;
+		_isBeingHitTimer = .2f;
+		_isBeingHitTimerCurrentValue = _isBeingHitTimer;
+		//StartCoroutine(CharacterTimerCoroutine());
 	}
 
 	protected void Update()
@@ -139,6 +147,51 @@ public class Character : MonoBehaviour
 		{
 			Destroy(gameObject);
 		}
+	}
+
+	protected void FixedUpdate()
+	{
+		if (_timerActive)
+		{
+			CalculatCharacterTimer();
+		}
+		if (_isBeingHit)
+		{
+			CalculateIsBeingHitTime();
+		}
+	}
+
+	protected void CalculatCharacterTimer()
+	{
+		if (_timer >= 0)
+		{
+			_timer -= Time.deltaTime;
+		}
+		else
+		{
+			_currentState = State.ANGRY;
+			Actions.OnMistakeMade?.Invoke();
+			Actions.OnLeft?.Invoke();
+		}
+	}
+
+	protected void CalculateIsBeingHitTime()
+	{
+		if (_isBeingHitTimerCurrentValue > 0)
+		{
+			_isBeingHitTimerCurrentValue -= Time.deltaTime;
+		}
+		else
+		{
+			Actions.OnHitFinished?.Invoke();
+			ResetIsBeingHitTimer();
+			_isBeingHit = false;
+		}
+	}
+
+	protected void ResetIsBeingHitTimer()
+	{
+		_isBeingHitTimerCurrentValue = _isBeingHitTimer;
 	}
 
 	public void ChangeOirderInLayer(int modification)
@@ -258,7 +311,7 @@ public class Character : MonoBehaviour
 			if (_currentExpectedKeyIndex < _painPointNumber - 1)
             {
 				_currentExpectedKeyIndex++;
-                StartCoroutine(HitTimerCoroutine());
+				_isBeingHit = true;
 			}       
 			else
 			{
@@ -269,7 +322,10 @@ public class Character : MonoBehaviour
 		}
 		else if (Keyboard.current.anyKey.wasPressedThisFrame)
 		{
+			Actions.OnHit?.Invoke();
+			Actions.OnHitCoordinates?.Invoke(_wrongHitPosition.position);
 			Actions.OnMistakeMade?.Invoke();
+			_isBeingHit = true;
 		}
 	}
 
@@ -289,28 +345,16 @@ public class Character : MonoBehaviour
 		}
 	}
 
-	protected IEnumerator HitTimerCoroutine()
-    {
-		while (true)
-		{
-			yield return new WaitForSeconds(.2f);
-            _isBeingHit = false;
-            Actions.OnHitFinished?.Invoke();
-            StopCoroutine(HitTimerCoroutine());
-		}
-	}
-
-	protected IEnumerator CharacterTimerCoroutine()
-    {
-		while (true)
-		{
-			yield return new WaitForSeconds(_timer);
-			_currentState = State.ANGRY;
-			Actions.OnMistakeMade?.Invoke();
-			Actions.OnLeft?.Invoke();
-			StopCoroutine(CharacterTimerCoroutine());
-		}
-	}
+	//protected IEnumerator HitTimerCoroutine()
+ //   {
+	//	while (true)
+	//	{
+	//		yield return new WaitForSeconds(.2f);
+ //           _isBeingHit = false;
+ //           Actions.OnHitFinished?.Invoke();
+ //           StopCoroutine(HitTimerCoroutine());
+	//	}
+	//}
 
 	protected IEnumerator SymbolsSpawnedChecker(int modification)
 	{
@@ -324,7 +368,7 @@ public class Character : MonoBehaviour
 
 	protected void StopTimer()
 	{
-		StopCoroutine(CharacterTimerCoroutine());
+		_timerActive = false;
 	}
 
 	protected List<OrderSymbol> TruncateList(List<OrderSymbol> list)

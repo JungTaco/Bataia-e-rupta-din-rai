@@ -8,7 +8,7 @@ public class LifeSystem : MonoBehaviour
 	private List<SpriteRenderer> _lives = new List<SpriteRenderer>();
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
-	void Start()
+	void Awake()
     {
         _lives = GetComponentsInChildren<SpriteRenderer>().ToList();
 	}
@@ -16,12 +16,16 @@ public class LifeSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void LoseLife()
     {
-        _lives[_lives.Count - 1].gameObject.SetActive(false);
-        _lives.RemoveAt(_lives.Count - 1);
+        if( _lives.Count > 0)
+        {
+			_lives[_lives.Count - 1].gameObject.SetActive(false);
+			_lives.RemoveAt(_lives.Count - 1);
+		}
+        
 	}
 }

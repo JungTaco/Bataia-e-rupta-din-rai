@@ -37,7 +37,8 @@ public class LevelControl : MonoBehaviour
 
 	private void OnEnable()
 	{
-        Actions.OnLeft += CheckCharacterInQueue;
+		Actions.OnLeft += CheckCharacterInQueue;
+        Actions.OnLeft += DecideNextQueueCharacterTimer;
         Actions.OnWaitingTimerEnded += CheckCharacterInQueue;
         Actions.OnLostLevel += LevelLost;
 		Actions.OnLevelPhaseChanged += DecideCurrentCharacterVariables;
@@ -46,12 +47,12 @@ public class LevelControl : MonoBehaviour
 	private void OnDisable()
 	{
 		Actions.OnLeft -= CheckCharacterInQueue;
+		Actions.OnLeft -= DecideNextQueueCharacterTimer;
 		Actions.OnWaitingTimerEnded -= CheckCharacterInQueue;
 		Actions.OnLostLevel -= LevelLost;
 		Actions.OnLevelPhaseChanged -= DecideCurrentCharacterVariables;
 	}
 
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
     {
 		DecideCurrentCharacterVariables();
@@ -60,14 +61,12 @@ public class LevelControl : MonoBehaviour
         _currentCharacterIndex = 0;
         _winPanel.gameObject.SetActive(false);
         _losePanel.gameObject.SetActive(false);
-		StartCoroutine(QueueTimerCoroutine());
 		SpawnCharacter(false, 0);
 	}
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+		CalculatQueueTimer();
     }
 
     private Character SpawnCharacter(bool isQueueing, float queueXPos)
@@ -76,8 +75,8 @@ public class LevelControl : MonoBehaviour
         if (_currentCharacterIndex < _characterList.Count)
         {
 			//null unde nu vreau sa dau dialogueBox
-			//_spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _currentCharacterMoveSpeed, _currentCharacterPointNumber, _currentCharacterPatienceTimer, 0, false, _dialoguePos, _dialogueBox);
-			character = _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _currentCharacterMoveSpeed, 4, 1000, isQueueing, queueXPos, false, _dialoguePos, _dialogueBox);
+			character = _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _currentCharacterMoveSpeed, _currentCharacterPointNumber, _currentCharacterPatienceTimer, isQueueing, queueXPos, false, _dialoguePos, _dialogueBox);
+			//character = _spawner.SpawnCharacter(_characterList[_currentCharacterIndex], _currentCharacterMoveSpeed, 4, 1000, isQueueing, queueXPos, false, _dialoguePos, _dialogueBox);
             _currentCharacterIndex++;
 			DecidePhase();
 		}
@@ -107,7 +106,7 @@ public class LevelControl : MonoBehaviour
                 _currentCharacterMoveSpeed = .15f;
 				break;
 			case Phase.HARD:
-                _currentCharacterMoveSpeed = .5f;
+                _currentCharacterMoveSpeed = .15f;
 				break;
 			default:
                 break;
@@ -143,7 +142,7 @@ public class LevelControl : MonoBehaviour
 				_currentCharacterPatienceTimer = 5;
 				break;
 			case Phase.HARD:
-				_currentCharacterPatienceTimer = 3;
+				_currentCharacterPatienceTimer = 4;
 				break;
 			default:
 				break;
@@ -182,7 +181,41 @@ public class LevelControl : MonoBehaviour
 
 	private void DecideNextQueueCharacterTimer()
 	{
-		_nextQueueCharacterTimer = 2f;
+		_nextQueueCharacterTimer = 4f;
+		//if (_currentLevel == 1)
+		//{
+		//	switch (_currentPhase)
+		//	{
+		//		case Phase.EASY:
+		//			_nextQueueCharacterTimer = 15f;
+		//			break;
+		//		case Phase.MEDIUM:
+		//			_nextQueueCharacterTimer = 13f;
+		//			break;
+		//		case Phase.HARD:
+		//			_nextQueueCharacterTimer = 11f;
+		//			break;
+		//		default:
+		//			break;
+		//	}	
+		//}
+		//else if (_currentLevel == 3)
+		//{
+		//	switch (_currentPhase)
+		//	{
+		//		case Phase.EASY:
+		//			_nextQueueCharacterTimer = 10f;
+		//			break;
+		//		case Phase.MEDIUM:
+		//			_nextQueueCharacterTimer = 8f;
+		//			break;
+		//		case Phase.HARD:
+		//			_nextQueueCharacterTimer = 6f;
+		//			break;
+		//		default:
+		//			break;
+		//	}
+		//}
 	}
 
 	//private void CalculateQueuePositions()
@@ -191,6 +224,24 @@ public class LevelControl : MonoBehaviour
 	//	_queueXPos.Add(_camera.orthographicSize / 4);
 	//	_queueXPos.Add(_camera.orthographicSize / 8);
 	//}
+
+	private void CalculatQueueTimer()
+	{
+		if (_nextQueueCharacterTimer >= 0)
+		{
+			_nextQueueCharacterTimer -= Time.deltaTime;
+		}
+		else
+		{
+			if (_currentCharacterIndex < _characterList.Count && _queue.Count < _maxQueueNumber)
+			{
+				Character c = SpawnCharacter(true, _queuePositions[_queue.Count].position.x);
+				_queue.Add(c);
+				c.ChangeOirderInLayer(-_queue.Count * 3);
+			}
+			DecideNextQueueCharacterTimer();
+		}
+	}
 
 	private void CheckCharacterInQueue()
 	{
@@ -221,26 +272,12 @@ public class LevelControl : MonoBehaviour
 
 	private void LevelLost()
     {
-		_characterList.Clear();
 		_losePanel.gameObject.SetActive(true);
+		//_characterList.Clear();
 	}
 
     private void LevelWon()
     {
 		_winPanel.gameObject.SetActive(true);
-	}
-
-	private IEnumerator QueueTimerCoroutine()
-	{
-		while (true)
-		{
-			yield return new WaitForSeconds(_nextQueueCharacterTimer);
-			if (_currentCharacterIndex < _characterList.Count && _queue.Count < _maxQueueNumber)
-			{
-				Character c = SpawnCharacter(true, _queuePositions[_queue.Count].position.x);
-				_queue.Add(c);
-				c.ChangeOirderInLayer(-_queue.Count*3);
-			}
-		}
 	}
 }
