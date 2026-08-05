@@ -40,8 +40,10 @@ public class Character : MonoBehaviour
 	protected Transform _dialoguePos;
 	protected bool _symbolsSpawned;
 	protected bool _timerActive;
+	protected bool _characterIsLeaving;
 	protected float _isBeingHitTimerCurrentValue;
 	protected float _isBeingHitTimer;
+	
 
 	public enum State {TALKING, QUEUEING, UNCURED, CURED, ANGRY};
 	protected State _currentState; 
@@ -120,6 +122,7 @@ public class Character : MonoBehaviour
 		_expectedPressingOrder = GetExpectedPressingOrder();
         _isBeingHit = false;
 		_timerActive = true;
+		_characterIsLeaving = false;
 		_isBeingHitTimer = .2f;
 		_isBeingHitTimerCurrentValue = _isBeingHitTimer;
 		//StartCoroutine(CharacterTimerCoroutine());
@@ -169,9 +172,13 @@ public class Character : MonoBehaviour
 		}
 		else
 		{
-			_currentState = State.ANGRY;
-			Actions.OnMistakeMade?.Invoke();
-			Actions.OnLeft?.Invoke();
+			if (!_characterIsLeaving)
+			{
+				_currentState = State.ANGRY;
+				Actions.OnMistakeMade?.Invoke();
+				_characterIsLeaving = true;
+				Actions.OnLeft?.Invoke();
+			}
 		}
 	}
 

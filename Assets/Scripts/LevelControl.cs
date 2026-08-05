@@ -133,6 +133,7 @@ public class LevelControl : MonoBehaviour
 
 	private void DecideCurrentCharacterTimer()
 	{
+		//_currentCharacterPatienceTimer = 2;
 		switch (_currentPhase)
 		{
 			case Phase.EASY:
@@ -181,41 +182,41 @@ public class LevelControl : MonoBehaviour
 
 	private void DecideNextQueueCharacterTimer()
 	{
-		_nextQueueCharacterTimer = 4f;
-		//if (_currentLevel == 1)
-		//{
-		//	switch (_currentPhase)
-		//	{
-		//		case Phase.EASY:
-		//			_nextQueueCharacterTimer = 15f;
-		//			break;
-		//		case Phase.MEDIUM:
-		//			_nextQueueCharacterTimer = 13f;
-		//			break;
-		//		case Phase.HARD:
-		//			_nextQueueCharacterTimer = 11f;
-		//			break;
-		//		default:
-		//			break;
-		//	}	
-		//}
-		//else if (_currentLevel == 3)
-		//{
-		//	switch (_currentPhase)
-		//	{
-		//		case Phase.EASY:
-		//			_nextQueueCharacterTimer = 10f;
-		//			break;
-		//		case Phase.MEDIUM:
-		//			_nextQueueCharacterTimer = 8f;
-		//			break;
-		//		case Phase.HARD:
-		//			_nextQueueCharacterTimer = 6f;
-		//			break;
-		//		default:
-		//			break;
-		//	}
-		//}
+		//_nextQueueCharacterTimer = 4f;
+		if (_currentLevel == 1)
+		{
+			switch (_currentPhase)
+			{
+				case Phase.EASY:
+					_nextQueueCharacterTimer = 15f;
+					break;
+				case Phase.MEDIUM:
+					_nextQueueCharacterTimer = 13f;
+					break;
+				case Phase.HARD:
+					_nextQueueCharacterTimer = 11f;
+					break;
+				default:
+					break;
+			}
+		}
+		else if (_currentLevel == 3)
+		{
+			switch (_currentPhase)
+			{
+				case Phase.EASY:
+					_nextQueueCharacterTimer = 10f;
+					break;
+				case Phase.MEDIUM:
+					_nextQueueCharacterTimer = 8f;
+					break;
+				case Phase.HARD:
+					_nextQueueCharacterTimer = 6f;
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 	//private void CalculateQueuePositions()
