@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelControl : MonoBehaviour
 {
@@ -68,6 +69,22 @@ public class LevelControl : MonoBehaviour
     {
 		CalculatQueueTimer();
     }
+
+	public void LoadNextScene()
+	{
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+	}
+
+	public void RestartLevel()
+	{
+		_currentPhase = Phase.EASY;
+		DecideCurrentCharacterVariables();
+		_currentCharacterIndex = 0;
+		_winPanel.gameObject.SetActive(false);
+		_losePanel.gameObject.SetActive(false);
+		SpawnCharacter(false, 0);
+		Actions.OnRestartLevel?.Invoke();
+	}
 
     private Character SpawnCharacter(bool isQueueing, float queueXPos)
     {

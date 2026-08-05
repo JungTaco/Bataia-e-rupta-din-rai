@@ -5,11 +5,23 @@ using UnityEngine;
 
 public class LifeSystem : MonoBehaviour
 {
+	private List<SpriteRenderer> _currentLives = new List<SpriteRenderer>();
 	private List<SpriteRenderer> _lives = new List<SpriteRenderer>();
+
+	private void OnEnable()
+	{
+		Actions.OnRestartLevel += ResetLives;
+	}
+
+	private void OnDisable()
+	{
+		Actions.OnRestartLevel -= ResetLives;
+	}
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Awake()
     {
+        _currentLives = GetComponentsInChildren<SpriteRenderer>().ToList();
         _lives = GetComponentsInChildren<SpriteRenderer>().ToList();
 	}
 
@@ -21,11 +33,20 @@ public class LifeSystem : MonoBehaviour
 
     public void LoseLife()
     {
-        if( _lives.Count > 0)
+        if( _currentLives.Count > 0)
         {
-			_lives[_lives.Count - 1].gameObject.SetActive(false);
-			_lives.RemoveAt(_lives.Count - 1);
+			_currentLives[_currentLives.Count - 1].gameObject.SetActive(false);
+			_currentLives.RemoveAt(_currentLives.Count - 1);
 		}
-        
+	}
+
+	public void ResetLives()
+	{
+		_currentLives.Clear();
+		foreach (SpriteRenderer life in _lives)
+		{
+			_currentLives.Add(life);
+			life.gameObject.SetActive(true);
+		}
 	}
 }
