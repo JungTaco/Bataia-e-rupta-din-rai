@@ -115,13 +115,13 @@ public class LevelControl : MonoBehaviour
         switch (_currentPhase)
         {
             case Phase.EASY:
-				_currentCharacterMoveSpeed = .15f;
+				_currentCharacterMoveSpeed = .5f;
                 break;
             case Phase.MEDIUM:
-                _currentCharacterMoveSpeed = .15f;
+                _currentCharacterMoveSpeed = .5f;
 				break;
 			case Phase.HARD:
-                _currentCharacterMoveSpeed = .15f;
+                _currentCharacterMoveSpeed = .5f;
 				break;
 			default:
                 break;

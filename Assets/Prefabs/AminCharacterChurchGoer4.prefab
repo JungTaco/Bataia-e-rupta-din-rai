@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8957643320033866893}
   - component: {fileID: 3081218382918142112}
   m_Layer: 0
-  m_Name: AminCharacterChurchGoer2
+  m_Name: AminCharacterChurchGoer4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,9 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e0e62a0af0c1aa42992b42fdd75db19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AminCharacter
-  _uncuredSprite: {fileID: 21300000, guid: b1f5046c3cb465d4a8990f1ded871df5, type: 3}
-  _hitSprite: {fileID: 21300000, guid: 9f148f6e84785fe4bad71d06883a1e38, type: 3}
-  _curedSprite: {fileID: 21300000, guid: a20bc1a7af5a89d44aa0b2c420dba7c4, type: 3}
+  _uncuredSprite: {fileID: 21300000, guid: 1ba03a3892b31d943b370cd77bdbbc8f, type: 3}
+  _hitSprite: {fileID: 21300000, guid: 4dc497d15a0e237429fb880de255f668, type: 3}
+  _curedSprite: {fileID: 21300000, guid: da24a2475cd6b3146889097f41e9ca96, type: 3}
   _painPoints:
   - {fileID: 6345155437909091385}
   - {fileID: 7036848896403905535}
@@ -190,7 +190,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: b1f5046c3cb465d4a8990f1ded871df5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1ba03a3892b31d943b370cd77bdbbc8f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -817,11 +817,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6539250546092601948, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.96
+      value: 0.14
       objectReference: {fileID: 0}
     - target: {fileID: 6539250546092601948, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 9.34
+      value: 9.78
       objectReference: {fileID: 0}
     - target: {fileID: 6539250546092601948, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
       propertyPath: m_LocalPosition.z
@@ -918,7 +918,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6539250546092601948, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.53
+      value: 4.13
       objectReference: {fileID: 0}
     - target: {fileID: 6539250546092601948, guid: 2695521c4366efa4f827277b96bc4f72, type: 3}
       propertyPath: m_LocalPosition.z

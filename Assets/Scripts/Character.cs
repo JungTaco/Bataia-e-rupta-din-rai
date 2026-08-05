@@ -119,24 +119,23 @@ public class Character : MonoBehaviour
 		_characterIsLeaving = false;
 		_isBeingHitTimer = .2f;
 		_isBeingHitTimerCurrentValue = _isBeingHitTimer;
-		//StartCoroutine(CharacterTimerCoroutine());
 	}
 
-	protected void Update()
-    {
+	protected void FixedUpdate()
+	{
 		if ((_currentState == State.UNCURED || _currentState == State.TALKING) && transform.position.x < 0)
-        {
-            Move();
+		{
+			Move();
 		}
-        else if (_currentState == State.UNCURED)
-        {
-            CheckRightKeysArepressed();			
+		else if (_currentState == State.UNCURED)
+		{
+			CheckRightKeysArepressed();
 		}
-        else if((_currentState == State.CURED || _currentState == State.ANGRY) && !_isBeingHit && transform.position.x < (_OrthographicScreenWidth * 1.5))
-        {
-            Leave();
-        }
-		else if(_currentState == State.QUEUEING && transform.position.x < _queueXPos)
+		else if ((_currentState == State.CURED || _currentState == State.ANGRY) && !_isBeingHit && transform.position.x < (_OrthographicScreenWidth * 1.5))
+		{
+			Leave();
+		}
+		else if (_currentState == State.QUEUEING && transform.position.x < _queueXPos)
 		{
 			Move();
 		}
@@ -144,10 +143,6 @@ public class Character : MonoBehaviour
 		{
 			Destroy(gameObject);
 		}
-	}
-
-	protected void FixedUpdate()
-	{
 		if (_timerActive)
 		{
 			CalculatCharacterTimer();
@@ -345,17 +340,6 @@ public class Character : MonoBehaviour
 			_spriteRenderer.sprite = _uncuredSprite;
 		}
 	}
-
-	//protected IEnumerator HitTimerCoroutine()
- //   {
-	//	while (true)
-	//	{
-	//		yield return new WaitForSeconds(.2f);
- //           _isBeingHit = false;
- //           Actions.OnHitFinished?.Invoke();
- //           StopCoroutine(HitTimerCoroutine());
-	//	}
-	//}
 
 	protected IEnumerator SymbolsSpawnedChecker(int modification)
 	{

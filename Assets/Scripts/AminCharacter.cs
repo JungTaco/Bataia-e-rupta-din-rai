@@ -20,10 +20,10 @@ public class AminCharacter : Character
     }
 
     // Update is called once per frame
-    new void Update()
-    {
-        base.Update();
-    }
+    //new void Update()
+    //{
+    //    base.Update();
+    //}
 
 	new void FixedUpdate()
 	{
