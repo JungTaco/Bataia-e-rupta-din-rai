@@ -1,7 +1,5 @@
-using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -132,39 +130,68 @@ public class LevelControl : MonoBehaviour
 
 	private void DecideCurrentCharacterPointNumber()
 	{
-		switch (_currentPhase)
+		if (_currentLevel == 1)
 		{
-			case Phase.EASY:
-				_currentCharacterPointNumber = 2;
-				break;
-			case Phase.MEDIUM:
-				_currentCharacterPointNumber = 3;
-				break;
-			case Phase.HARD:
-				_currentCharacterPointNumber = 4;
-				break;
-			default:
-				break;
+			switch (_currentPhase)
+			{
+				case Phase.EASY:
+					_currentCharacterPointNumber = 2;
+					break;
+				case Phase.MEDIUM:
+					_currentCharacterPointNumber = 3;
+					break;
+				case Phase.HARD:
+					_currentCharacterPointNumber = 4;
+					break;
+				default:
+					break;
+			}
 		}
+		else if (_currentLevel == 3)
+		{
+			_currentCharacterPointNumber = 4;
+		}
+		
 	}
 
 	private void DecideCurrentCharacterTimer()
 	{
 		//_currentCharacterPatienceTimer = 2;
-		switch (_currentPhase)
+		if (_currentLevel == 1)
 		{
-			case Phase.EASY:
-				_currentCharacterPatienceTimer = 6;
-				break;
-			case Phase.MEDIUM:
-				_currentCharacterPatienceTimer = 5;
-				break;
-			case Phase.HARD:
-				_currentCharacterPatienceTimer = 4;
-				break;
-			default:
-				break;
+			switch (_currentPhase)
+			{
+				case Phase.EASY:
+					_currentCharacterPatienceTimer = 6;
+					break;
+				case Phase.MEDIUM:
+					_currentCharacterPatienceTimer = 5;
+					break;
+				case Phase.HARD:
+					_currentCharacterPatienceTimer = 4;
+					break;
+				default:
+					break;
+			}
 		}
+		else if (_currentLevel == 3)
+		{
+			switch (_currentPhase)
+			{
+				case Phase.EASY:
+					_currentCharacterPatienceTimer = 6;
+					break;
+				case Phase.MEDIUM:
+					_currentCharacterPatienceTimer = 6;
+					break;
+				case Phase.HARD:
+					_currentCharacterPatienceTimer = 6;
+					break;
+				default:
+					break;
+			}
+		}
+			
 	}
 
 	private void DecidePhase()

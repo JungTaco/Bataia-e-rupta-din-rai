@@ -1257,22 +1257,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelControl
   _characterList:
-  - {fileID: 5841711691876423021, guid: 49b8d9c1ca515624bb4ea76578bf44bf, type: 3}
-  - {fileID: 5841711691876423021, guid: b3dabb244f4ed0c4982c333663cd87c2, type: 3}
-  - {fileID: 5841711691876423021, guid: 38fbe6eb7fc392e4c9b2d1d7463738f2, type: 3}
-  - {fileID: 5841711691876423021, guid: 49204ab0f4cde8b4c9decef887c914fe, type: 3}
-  - {fileID: 5841711691876423021, guid: 49b8d9c1ca515624bb4ea76578bf44bf, type: 3}
-  - {fileID: 5841711691876423021, guid: b3dabb244f4ed0c4982c333663cd87c2, type: 3}
-  - {fileID: 5841711691876423021, guid: 38fbe6eb7fc392e4c9b2d1d7463738f2, type: 3}
-  - {fileID: 5841711691876423021, guid: 49204ab0f4cde8b4c9decef887c914fe, type: 3}
-  - {fileID: 5841711691876423021, guid: 49b8d9c1ca515624bb4ea76578bf44bf, type: 3}
-  - {fileID: 5841711691876423021, guid: b3dabb244f4ed0c4982c333663cd87c2, type: 3}
-  - {fileID: 5841711691876423021, guid: 38fbe6eb7fc392e4c9b2d1d7463738f2, type: 3}
-  - {fileID: 5841711691876423021, guid: 49204ab0f4cde8b4c9decef887c914fe, type: 3}
-  - {fileID: 5841711691876423021, guid: 49b8d9c1ca515624bb4ea76578bf44bf, type: 3}
-  - {fileID: 5841711691876423021, guid: b3dabb244f4ed0c4982c333663cd87c2, type: 3}
-  - {fileID: 5841711691876423021, guid: 38fbe6eb7fc392e4c9b2d1d7463738f2, type: 3}
+  - {fileID: 5841711691876423021, guid: 3ac358a7a4e2bd249b6c96a8646e59a0, type: 3}
+  - {fileID: 5841711691876423021, guid: e82420a74e0d1e9429f7fe3d56b094b4, type: 3}
+  - {fileID: 5841711691876423021, guid: a0026321588c9604fa25b14bc27defe2, type: 3}
+  - {fileID: 5841711691876423021, guid: c866d3d0801190449b48b0728e078a19, type: 3}
+  - {fileID: 5841711691876423021, guid: b28380c728cc5a84ebd5dc757d10cacf, type: 3}
+  - {fileID: 5841711691876423021, guid: 3ac358a7a4e2bd249b6c96a8646e59a0, type: 3}
+  - {fileID: 3081218382918142112, guid: 674c6b0a20afcb545b87839dda02e39f, type: 3}
+  - {fileID: 5841711691876423021, guid: a0026321588c9604fa25b14bc27defe2, type: 3}
+  - {fileID: 5841711691876423021, guid: c866d3d0801190449b48b0728e078a19, type: 3}
   - {fileID: -3188072684067862380, guid: 1a4e19dc6f379ed4793eba8a006a7d50, type: 3}
+  - {fileID: 3081218382918142112, guid: 674c6b0a20afcb545b87839dda02e39f, type: 3}
+  - {fileID: 5841711691876423021, guid: c866d3d0801190449b48b0728e078a19, type: 3}
+  - {fileID: -3188072684067862380, guid: 1a4e19dc6f379ed4793eba8a006a7d50, type: 3}
+  - {fileID: -3188072684067862380, guid: 6911b65a95dfaa64e98c1222079a28ba, type: 3}
+  - {fileID: 3081218382918142112, guid: 674c6b0a20afcb545b87839dda02e39f, type: 3}
   _winPanel: {fileID: 1366950144}
   _losePanel: {fileID: 455305675}
   _dialoguePos: {fileID: 860535960}
