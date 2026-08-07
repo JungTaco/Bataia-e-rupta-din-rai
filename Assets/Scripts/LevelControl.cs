@@ -76,13 +76,6 @@ public class LevelControl : MonoBehaviour
 	public void RestartLevel()
 	{
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-		//_currentPhase = Phase.EASY;
-		//DecideCurrentCharacterVariables();
-		//_currentCharacterIndex = 0;
-		//_winPanel.gameObject.SetActive(false);
-		//_losePanel.gameObject.SetActive(false);
-		//SpawnCharacter(false, 0);
-		//Actions.OnRestartLevel?.Invoke();
 	}
 
     private Character SpawnCharacter(bool isQueueing, float queueXPos)
@@ -249,19 +242,18 @@ public class LevelControl : MonoBehaviour
 			switch (_currentPhase)
 			{
 				case Phase.EASY:
-					_currentCharacterPatienceTimer = 6;
+					_currentCharacterPatienceTimer = 3;
 					break;
 				case Phase.MEDIUM:
-					_currentCharacterPatienceTimer = 6;
+					_currentCharacterPatienceTimer = 5;
 					break;
 				case Phase.HARD:
-					_currentCharacterPatienceTimer = 6;
+					_currentCharacterPatienceTimer = 5;
 					break;
 				default:
 					break;
 			}
 		}
-		_currentCharacterPatienceTimer = 100;
 	}
 
 	private void DecidePhase()

@@ -418,7 +418,7 @@ PrefabInstance:
     - target: {fileID: 3125482174314290387, guid: ba7f3bce5b8d03f47b0f81ad754321cc, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 982332186}
+      objectReference: {fileID: 455305676}
     - target: {fileID: 3125482174314290387, guid: ba7f3bce5b8d03f47b0f81ad754321cc, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: RestartLevel
@@ -438,6 +438,17 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 494556365861030623, guid: ba7f3bce5b8d03f47b0f81ad754321cc, type: 3}
   m_PrefabInstance: {fileID: 455305673}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &455305676 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3529857269648826334, guid: ba7f3bce5b8d03f47b0f81ad754321cc, type: 3}
+  m_PrefabInstance: {fileID: 455305673}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a761e6cd2721ef4bae158c4af66fb8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RestartButton
 --- !u!1 &479505795
 GameObject:
   m_ObjectHideFlags: 0
@@ -1368,7 +1379,7 @@ PrefabInstance:
     - target: {fileID: 4403099477983479810, guid: 9369edbb84f77ed49947de22ec58682b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 982332186}
+      objectReference: {fileID: 1366950146}
     - target: {fileID: 4403099477983479810, guid: 9369edbb84f77ed49947de22ec58682b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: LoadNextScene
@@ -1376,7 +1387,7 @@ PrefabInstance:
     - target: {fileID: 8658066773210305013, guid: 9369edbb84f77ed49947de22ec58682b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 982332186}
+      objectReference: {fileID: 1366950145}
     - target: {fileID: 8658066773210305013, guid: 9369edbb84f77ed49947de22ec58682b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: RestartLevel
@@ -1396,6 +1407,28 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 2588704555204346689, guid: 9369edbb84f77ed49947de22ec58682b, type: 3}
   m_PrefabInstance: {fileID: 1366950142}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1366950145 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2654558454158917353, guid: 9369edbb84f77ed49947de22ec58682b, type: 3}
+  m_PrefabInstance: {fileID: 1366950142}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a761e6cd2721ef4bae158c4af66fb8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RestartButton
+--- !u!114 &1366950146 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 46988008306063898, guid: 9369edbb84f77ed49947de22ec58682b, type: 3}
+  m_PrefabInstance: {fileID: 1366950142}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47660b933ff005d41b4b13fc3dc7083b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ContinueButton
 --- !u!1 &2003483280
 GameObject:
   m_ObjectHideFlags: 0

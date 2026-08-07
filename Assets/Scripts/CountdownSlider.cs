@@ -47,6 +47,5 @@ public class CountdownSlider : MonoBehaviour
     private void StopTimer()
     {
         _timerInProgress = false;
-		Debug.Log("stopped timer");
     }
 }

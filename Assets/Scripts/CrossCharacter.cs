@@ -22,12 +22,6 @@ public class CrossCharacter : Character
 		//StartCoroutine(CharacterTimerCoroutine());
 	}
 
-    // Update is called once per frame
-    //new void Update()
-    //{
-    //    base.Update();
-    //}
-
 	new void FixedUpdate()
 	{
 		base.FixedUpdate();
@@ -57,6 +51,7 @@ public class CrossCharacter : Character
 			{
 				if (_crossCounter < _crossesNeeded - 1)
 				{
+					_isBeingHit = true;
 					_crossCounter++;
 					RespawnPainPoints();
 					_currentExpectedKeyIndex = 0;
@@ -71,7 +66,10 @@ public class CrossCharacter : Character
 		}
 		else if (Keyboard.current.anyKey.wasPressedThisFrame)
 		{
+			Actions.OnHit?.Invoke();
+			Actions.OnHitCoordinates?.Invoke(_wrongHitPosition.position);
 			Actions.OnMistakeMade?.Invoke();
+			_isBeingHit = true;
 		}
 	}
 

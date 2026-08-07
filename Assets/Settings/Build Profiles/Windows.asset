@@ -23,11 +23,32 @@ MonoBehaviour:
   m_OverrideGlobalSceneList: 1
   m_Scenes:
   - m_enabled: 1
+    m_path: Assets/Scenes/StartScreen.unity
+    m_guid: b7bbb353e853d524bb424908fb8a013c
+  - m_enabled: 1
+    m_path: Assets/Scenes/AnimaticStart.unity
+    m_guid: 4b4d193482834d248b0b83cb65ddb48d
+  - m_enabled: 1
+    m_path: Assets/Scenes/Tutorial.unity
+    m_guid: c1726cb4060293b48b4eb99523ae6d3f
+  - m_enabled: 1
     m_path: Assets/Scenes/Level1.unity
     m_guid: da588571a43fb964a9f481f0b015a168
   - m_enabled: 1
+    m_path: Assets/Scenes/AnimaticWonLevel1.unity
+    m_guid: f8adf58fc1e1cae468803094ec7fd91e
+  - m_enabled: 1
+    m_path: Assets/Scenes/Level2.unity
+    m_guid: e4cba2ce0769833488e0c81a8e5211c8
+  - m_enabled: 1
+    m_path: Assets/Scenes/AnimaticWonLevel2.unity
+    m_guid: 447f3ef433bc92e4d8cab6078efe52b0
+  - m_enabled: 1
     m_path: Assets/Scenes/Level3.unity
     m_guid: 306c1205329fd3b4ebad1db9c6a251b5
+  - m_enabled: 1
+    m_path: Assets/Scenes/AnimaticWonLevel3.unity
+    m_guid: d8806bd9a149b0547947be2b0204b721
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:

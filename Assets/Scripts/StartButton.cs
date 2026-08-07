@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ContinueButton : MonoBehaviour
+public class StartButton : MonoBehaviour
 {
-    public void LoadNextScene()
+    public void StartGame()
     {
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 	}
