@@ -466,7 +466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b65f5bd512818644eb9b33c4f608cd4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CountdownSlider
-  _timer: 28
+  _timer: 20
 --- !u!1 &460072780
 GameObject:
   m_ObjectHideFlags: 0

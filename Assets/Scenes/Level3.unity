@@ -1282,7 +1282,7 @@ MonoBehaviour:
   - {fileID: 5841711691876423021, guid: c866d3d0801190449b48b0728e078a19, type: 3}
   - {fileID: -3188072684067862380, guid: 1a4e19dc6f379ed4793eba8a006a7d50, type: 3}
   - {fileID: -3188072684067862380, guid: 6911b65a95dfaa64e98c1222079a28ba, type: 3}
-  - {fileID: 3081218382918142112, guid: 674c6b0a20afcb545b87839dda02e39f, type: 3}
+  - {fileID: 5759000920751328227, guid: e9439cce1ceacd142b0e933343d76ddc, type: 3}
   _winPanel: {fileID: 1366950144}
   _losePanel: {fileID: 455305675}
   _dialoguePos: {fileID: 860535960}

@@ -254,6 +254,8 @@ public class LevelControl : MonoBehaviour
 					break;
 			}
 		}
+		//Debug.Log("to delete line");
+		//_currentCharacterPatienceTimer = 100f;
 	}
 
 	private void DecidePhase()
@@ -311,11 +313,10 @@ public class LevelControl : MonoBehaviour
 			switch (_currentPhase)
 			{
 				case Phase.EASY:
-					_nextQueueCharacterTimer = 2f;
-					_nextQueueCharacterTimer = 2f;
+					_nextQueueCharacterTimer = 1f;
 					break;
 				case Phase.MEDIUM:
-					_nextQueueCharacterTimer = .5f;
+					_nextQueueCharacterTimer = .25f;
 					break;
 				case Phase.HARD:
 					_nextQueueCharacterTimer = .25f;

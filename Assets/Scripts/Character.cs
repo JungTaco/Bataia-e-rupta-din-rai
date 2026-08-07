@@ -109,6 +109,7 @@ public class Character : MonoBehaviour
 		_spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 		_symbolsSpawned = false;
 	}
+
 	protected void Start()
 	{
 		DecideVisiblePainPoints();

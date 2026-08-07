@@ -57,7 +57,7 @@ public class MainCharacterControl : MonoBehaviour
 
     private void Hit(Vector3 pos)
     {
-        Debug.Log("test hit " + pos);
+        //Debug.Log("test hit " + pos);
         _idleHand.gameObject.SetActive(false);
         _hittingHand.transform.position = pos;
         _hittingHand.gameObject.SetActive(true);
