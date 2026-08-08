@@ -44,6 +44,9 @@ MonoBehaviour:
     m_path: Assets/Scenes/AnimaticWonLevel2.unity
     m_guid: 447f3ef433bc92e4d8cab6078efe52b0
   - m_enabled: 1
+    m_path: Assets/Scenes/AnimaticLostLevel2.unity
+    m_guid: f3f02c90d02fbd842bc4db4c9bbd4ad1
+  - m_enabled: 1
     m_path: Assets/Scenes/Level3.unity
     m_guid: 306c1205329fd3b4ebad1db9c6a251b5
   - m_enabled: 1

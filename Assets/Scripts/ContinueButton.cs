@@ -7,4 +7,9 @@ public class ContinueButton : MonoBehaviour
     {
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 	}
+
+	public void LoadSceneAfterNext()
+	{
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+	}
 }

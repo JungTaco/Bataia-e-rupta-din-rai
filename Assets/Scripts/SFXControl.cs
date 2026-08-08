@@ -4,19 +4,30 @@ public class SFXControl : MonoBehaviour
 {
     [SerializeField]
     private AudioSource _mistakeAudio;
+	[SerializeField]
+	private AudioSource _hitAudio;
 
 	private void OnEnable()
 	{
-		Actions.OnMistakeMade += PlayMistkaeAudio;
+		Actions.OnMistakeMade += PlayMistakeAudio;
+		Actions.OnHit += PlayHitAudio;
 	}
 
 	private void OnDisable()
 	{
-		Actions.OnMistakeMade -= PlayMistkaeAudio;
+		Actions.OnMistakeMade -= PlayMistakeAudio;
+		Actions.OnHit -= PlayHitAudio;
 	}
 
-	private void PlayMistkaeAudio()
+	private void PlayMistakeAudio()
     {
-        _mistakeAudio.Play();
+		_hitAudio.mute = true;
+		_mistakeAudio.Play();
+	}
+
+	private void PlayHitAudio()
+	{
+		_hitAudio.mute = false;
+		_hitAudio.Play();
 	}
 }

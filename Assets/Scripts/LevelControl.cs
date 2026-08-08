@@ -330,13 +330,13 @@ public class LevelControl : MonoBehaviour
 			switch (_currentPhase)
 			{
 				case Phase.EASY:
-					_nextQueueCharacterTimer = 6f;
+					_nextQueueCharacterTimer = 3f;
 					break;
 				case Phase.MEDIUM:
-					_nextQueueCharacterTimer = 6f;
+					_nextQueueCharacterTimer = 3f;
 					break;
 				case Phase.HARD:
-					_nextQueueCharacterTimer = 6f;
+					_nextQueueCharacterTimer = 3f;
 					break;
 				default:
 					break;

@@ -844,7 +844,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2039510800}
         m_TargetAssemblyTypeName: ContinueButton, Assembly-CSharp
-        m_MethodName: LoadNextScene
+        m_MethodName: LoadSceneAfterNext
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
